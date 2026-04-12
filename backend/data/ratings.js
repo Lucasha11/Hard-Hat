@@ -15,7 +15,12 @@ import {ObjectId} from 'mongodb';
 import validation from './validation.js';
 
 let exportedMethods = {
-    
+    //return all ratings
+     async getAllRatings(){
+            const ratingCollection = await ratings();
+            return await ratingCollection.find({}).toArray();
+        },
+    //query ratings by id
     async getRatingByID(id) {
         id = validation.checkId(id);
         const ratingCollection = await ratings();
@@ -23,7 +28,7 @@ let exportedMethods = {
         if (!rating) throw 'Error: User not found';
         return rating;
     },
-
+    //remove one rating by Id
     async removeRating(id) {
         id = validation.checkId(id);
         const ratingCollection = await ratings();
@@ -34,7 +39,7 @@ let exportedMethods = {
 
     return {...deletionInfo, deleted: true};
     },
-    
+    //add complete set of ratings
     async addAllRatings(noiseRating, airQuality, constructionSize, workHours){
         noiseRating = validation.validateeRating(noiseRating)
         airQuality = validation.validateeRating(airQuality)

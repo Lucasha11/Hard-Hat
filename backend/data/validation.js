@@ -26,6 +26,19 @@ const exportedMethods = {
         return rating
     },
 
+    validateCoordinate(coord){
+        if (!coord){
+            throw "Error: Coordinate must exist"
+        }
+        if (typeof coord !== 'number')
+            throw "Error: Coordinate must be a number"
+        //Coordinate bound by -90 to 90, undusre if it's correct 
+        if (coord < -90 || coord > 90)
+            throw "Error: Coordinate must be between -90 and 90 degrees"
+
+        return coord 
+    }   
+
 
    
 
