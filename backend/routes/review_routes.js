@@ -88,7 +88,13 @@ router.route('/sites/:siteId').get(async (req, res) => {
 router.route('/sites/:siteId/reviews/new').get(requireLogin, async (req, res) => {
   const { siteId } = req.params;
   try {
-    const site = await siteData.getSiteById(siteId);
+    let site;
+    try {
+      site = await siteData.getSiteById(siteId);
+    } catch (notFound) {
+      // Bootstrap from NYC Open Data on first review attempt for this site.
+      site = await siteData.createSite(siteId);
+    }
     return res.render('reviews/createReview', {
       title: 'Write a Review',
       site: { ...site, _id: site._id.toString() },
@@ -120,8 +126,7 @@ router.route('/sites/:siteId/reviews').post(requireLogin, upload.single('photo')
 
     const photoUrls = req.file ? [`/uploads/reviews/${req.file.filename}`] : [];
 
-    const { firstName, lastName, _id: userId } = req.session.user;
-    const username = `${firstName}${lastName ? lastName[0].toUpperCase() : ''}`;
+    const { _id: userId, username } = req.session.user;
 
     await reviewData.createReview(siteId, userId, username, ratings, title, body, photoUrls);
     return res.redirect(`/sites/${siteId}`);
