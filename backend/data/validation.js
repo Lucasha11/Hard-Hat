@@ -98,6 +98,26 @@ const exportedMethods = {
         const valid = ['Manhattan', 'Brooklyn', 'Queens', 'Bronx', 'Staten Island'];
         if (!valid.includes(borough)) throw `Error: Borough must be one of: ${valid.join(', ')}`;
         return borough;
+    },
+
+    // Allowed: letters, numbers, special characters. No whitespace. Length 3-30.
+    validateUsername(username) {
+        if (!username || typeof username !== 'string') throw 'Error: Username must be a string';
+        username = username.trim();
+        if (username.length < 3 || username.length > 30)
+            throw 'Error: Username must be between 3 and 30 characters';
+        if (/\s/.test(username)) throw 'Error: Username cannot contain spaces';
+        if (!/^[!-~]+$/.test(username))
+            throw 'Error: Username can only contain letters, numbers, and special characters';
+        return username;
+    },
+
+    // Construction site Building ID — non-empty trimmed string (e.g., "M164").
+    validateSiteId(siteId) {
+        if (!siteId || typeof siteId !== 'string') throw 'Error: siteId must be a non-empty string';
+        siteId = siteId.trim();
+        if (siteId.length === 0) throw 'Error: siteId cannot be empty';
+        return siteId;
     }
 
 }

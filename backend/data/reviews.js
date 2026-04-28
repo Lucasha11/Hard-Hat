@@ -1,3 +1,24 @@
+/**
+ * {
+  "_id": "67f2db1b6d3a1247b6233001",
+  "siteId": "M164",
+  "userId": "67f2d89f6d3a1247b6231001",
+  "username": "leighanaR",
+  "ratings": {
+    "noise": 5,
+    "airQuality": 2,
+    "constructionSize": 4,
+    "workHours": 3
+  },
+  "title": "Very loud during the morning",
+  "body": "Heavy drilling starts before lunch and the sidewalk feels crowded.",
+  "photoUrls": ["/public/uploads/reviews/rev1-1.jpg"],
+  "likeCount": 8,
+  "createdAt": "2026-04-01T11:35:00.000Z",
+  "updatedAt": "2026-04-01T11:35:00.000Z"
+}
+ */
+
 import { reviews, users } from '../config/mongoCollections.js';
 import { ObjectId } from 'mongodb';
 import validation from './validation.js';
@@ -5,16 +26,14 @@ import siteData from './constructionSites.js';
 
 const exportedMethods = {
   async createReview(siteId, userId, username, ratings, title, body, photoUrls = []) {
-    // --- validate inputs ---
+    //  validate inputs 
     if (!siteId || typeof siteId !== 'string' || siteId.trim().length === 0)
       throw 'Error: siteId is required';
     siteId = siteId.trim();
 
     userId = validation.checkId(userId);
 
-    if (!username || typeof username !== 'string' || username.trim().length === 0)
-      throw 'Error: username is required';
-    username = username.trim();
+    username = validation.validateUsername(username);
 
     if (!ratings || typeof ratings !== 'object')
       throw 'Error: ratings object is required';
@@ -36,6 +55,14 @@ const exportedMethods = {
     if (body.length > 2000) throw 'Error: review text cannot exceed 2000 characters';
 
     if (!Array.isArray(photoUrls)) photoUrls = [];
+
+    // Validate the siteId against the NYC Open Data dataset and bootstrap
+    // a local construction site doc if one doesn't exist yet.
+    try {
+      await siteData.getSiteById(siteId);
+    } catch (e) {
+      await siteData.createSite(siteId);
+    }
 
     const newReview = {
       siteId,
@@ -149,6 +176,16 @@ const exportedMethods = {
     await siteData.updateSiteStats(existing.siteId);
 
     return updated;
+  },
+
+  async updateUsernameOnUserReviews(userId, newUsername) {
+    userId = validation.checkId(userId);
+    newUsername = validation.validateUsername(newUsername);
+    const reviewsCollection = await reviews();
+    await reviewsCollection.updateMany(
+      { userId: new ObjectId(userId) },
+      { $set: { username: newUsername } }
+    );
   },
 
   async deleteReview(reviewId, userId) {
