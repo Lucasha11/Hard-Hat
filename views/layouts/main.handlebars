@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{{title}} | Hard Hat</title>
+  <link rel="stylesheet" href="/css/main.css" />
+</head>
+<body>
+  <nav class="navbar">
+    <a href="/" class="nav-logo">Hard Hat</a>
+    <div class="nav-links">
+      {{#if isLoggedIn}}
+        <span class="nav-user">{{sessionUser.firstName}} {{sessionUser.lastName}}</span>
+        <a href="/signout" class="nav-link">Sign Out</a>
+      {{else}}
+        <a href="/signin" class="nav-link">Sign In</a>
+        <a href="/register" class="nav-link nav-link--cta">Register</a>
+      {{/if}}
+    </div>
+  </nav>
+
+  <main class="main-content">
+    {{{body}}}
+  </main>
+
+  <footer class="footer">
+    <p>&copy; 2026 Hard Hat &mdash; NYC Construction Reviews</p>
+  </footer>
+</body>
+</html>
