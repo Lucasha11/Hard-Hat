@@ -1,0 +1,82 @@
+<div class="form-page">
+  <div class="form-header">
+    <h1 class="form-title">Create Account</h1>
+    <p class="form-subtitle">Already have an account? <a href="/signin">Sign in</a></p>
+  </div>
+
+  {{#if error}}
+    <div class="alert alert--error" id="form-error">{{error}}</div>
+  {{/if}}
+
+  <form method="POST" action="/register" class="review-form card" id="register-form" novalidate>
+
+    <div class="form-group">
+      <label for="firstName" class="form-label">First Name <span class="required">*</span></label>
+      <input
+        type="text"
+        id="firstName"
+        name="firstName"
+        class="form-input"
+        value="{{formData.firstName}}"
+        required
+      />
+    </div>
+
+    <div class="form-group">
+      <label for="lastName" class="form-label">Last Name <span class="required">*</span></label>
+      <input
+        type="text"
+        id="lastName"
+        name="lastName"
+        class="form-input"
+        value="{{formData.lastName}}"
+        required
+      />
+    </div>
+
+    <div class="form-group">
+      <label for="email" class="form-label">Email <span class="required">*</span></label>
+      <input
+        type="email"
+        id="email"
+        name="email"
+        class="form-input"
+        value="{{formData.email}}"
+        required
+      />
+    </div>
+
+    <div class="form-group">
+      <label for="username" class="form-label">Username <span class="required">*</span></label>
+      <input
+        type="text"
+        id="username"
+        name="username"
+        class="form-input"
+        value="{{formData.username}}"
+        required
+      />
+      <p class="form-hint">3–30 characters. Letters, numbers, and special characters only. No spaces.</p>
+    </div>
+
+    <div class="form-group">
+      <label for="password" class="form-label">Password <span class="required">*</span></label>
+      <input
+        type="password"
+        id="password"
+        name="password"
+        class="form-input"
+        required
+      />
+      <p class="form-hint">At least 8 characters with one uppercase letter, one number, and one special character.</p>
+    </div>
+
+    <div class="form-actions">
+      <button type="submit" class="btn btn--primary">Create Account</button>
+    </div>
+
+  </form>
+</div>
+
+<script src="/js/validation.js"></script>
+<script src="/js/register.js"></script>

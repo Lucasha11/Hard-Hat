@@ -13,7 +13,7 @@ export const usersDataFunctions = {
         lastName = validation.validateName(lastName);
         email = validation.validateEmail(email);
         username = validation.validateUsername(username);
-        password = validation.validatePassword(password);
+        password = await validation.hashPassword(password);
         profileImageUrl = validation.validateImage(profileImageUrl);
         if (homeBorough) homeBorough = validation.validateBorough(homeBorough);
 
@@ -133,7 +133,7 @@ export const usersDataFunctions = {
         if (userInfo.email)
             userInfo.email = validation.validateEmail(userInfo.email);
         if (userInfo.hashedPassword)
-            userInfo.hashedPassword = validation.validatePassword(userInfo.hashedPassword);
+            userInfo.hashedPassword = await validation.hashPassword(userInfo.hashedPassword);
         if (userInfo.homeBorough)
             userInfo.homeBorough = validation.validateBorough(userInfo.homeBorough);
 
