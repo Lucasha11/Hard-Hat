@@ -1,0 +1,118 @@
+<div class="site-detail" data-site-id="{{site._id}}"{{#if isLoggedIn}} data-user-id="{{sessionUser._id}}"{{/if}}>
+
+  {{! ── Site header ── }}
+  <div class="site-header">
+    <div class="site-header__text">
+      <h1 class="site-title">{{site.schoolName}}</h1>
+      <p class="site-meta">{{site.buildingAddress}}, {{site.borough}}</p>
+      {{#if site.projectDescription}}
+        <p class="site-description">{{site.projectDescription}}</p>
+      {{/if}}
+    </div>
+  </div>
+
+  {{! ── Average ratings ── }}
+  {{#if site.averageRatings}}
+  <div class="ratings-summary card">
+    <h2 class="card-title">Average Ratings <span class="review-count" id="review-count-display">({{site.reviewCount}} review{{#unless (eq site.reviewCount 1)}}s{{/unless}})</span></h2>
+    <div class="ratings-grid">
+      <div class="rating-item">
+        <span class="rating-label">Noise</span>
+        <span class="rating-value">{{site.averageRatings.noise}} / 5</span>
+      </div>
+      <div class="rating-item">
+        <span class="rating-label">Air Quality</span>
+        <span class="rating-value">{{site.averageRatings.airQuality}} / 5</span>
+      </div>
+      <div class="rating-item">
+        <span class="rating-label">Construction Size</span>
+        <span class="rating-value">{{site.averageRatings.constructionSize}} / 5</span>
+      </div>
+      <div class="rating-item">
+        <span class="rating-label">Work Hours</span>
+        <span class="rating-value">{{site.averageRatings.workHours}} / 5</span>
+      </div>
+    </div>
+  </div>
+  {{/if}}
+
+  {{! ── Reviews section ── }}
+  <div class="reviews-section">
+    <div class="reviews-header">
+      <h2 class="section-title">Community Reviews</h2>
+      <div class="reviews-actions">
+
+        {{! Sort controls }}
+        <form method="GET" action="/sites/{{site._id}}" class="sort-form">
+          <label for="sort" class="sort-label">Sort by:</label>
+          <select name="sort" id="sort" class="sort-select">
+            <option value="newest" {{#if sortNewest}}selected{{/if}}>Newest</option>
+            <option value="most_liked" {{#if sortMostLiked}}selected{{/if}}>Most Liked</option>
+          </select>
+        </form>
+
+        {{#if isLoggedIn}}
+          <a href="/sites/{{site._id}}/reviews/new" class="btn btn--primary">Write a Review</a>
+        {{else}}
+          <a href="/signin" class="btn btn--secondary">Sign in to review</a>
+        {{/if}}
+      </div>
+    </div>
+
+    {{#if hasReviews}}
+      <div class="review-list" id="review-list-container">
+        {{#each reviews}}
+        <div class="review-card card" data-review-id="{{_id}}">
+          <div class="review-card__header">
+            <h3 class="review-title">{{title}}</h3>
+            <span class="review-date">{{formatDate createdAt}}</span>
+          </div>
+          <p class="review-author">By <strong>{{username}}</strong></p>
+
+          <div class="review-ratings">
+            <span class="rating-badge">Noise: {{ratings.noise}}/5</span>
+            <span class="rating-badge">Air: {{ratings.airQuality}}/5</span>
+            <span class="rating-badge">Size: {{ratings.constructionSize}}/5</span>
+            <span class="rating-badge">Hours: {{ratings.workHours}}/5</span>
+          </div>
+
+          <p class="review-body">{{body}}</p>
+
+          {{#if photoUrls.length}}
+          <div class="review-photos">
+            {{#each photoUrls}}
+              <img src="{{this}}" alt="Review photo" class="review-photo" />
+            {{/each}}
+          </div>
+          {{/if}}
+
+          <div class="review-footer">
+            <span class="like-count">&#9829; {{likeCount}}</span>
+            {{#if isOwner}}
+            <div class="review-actions">
+              <a href="/reviews/{{_id}}/edit" class="btn btn--small btn--secondary">Edit</a>
+              <form method="POST" action="/reviews/{{_id}}/delete"
+                    class="delete-form" data-review-id="{{_id}}">
+                <button type="submit" class="btn btn--small btn--danger">Delete</button>
+              </form>
+            </div>
+            {{/if}}
+          </div>
+        </div>
+        {{/each}}
+      </div>
+    {{else}}
+      <div class="no-reviews card">
+        <p>No reviews yet. Be the first to share your experience!</p>
+        {{#if isLoggedIn}}
+          <a href="/sites/{{site._id}}/reviews/new" class="btn btn--primary">Write a Review</a>
+        {{else}}
+          <a href="/signin" class="btn btn--secondary">Sign in to write the first review</a>
+        {{/if}}
+      </div>
+    {{/if}}
+  </div>
+
+</div>
+
+<script src="/js/siteDetail.js"></script>

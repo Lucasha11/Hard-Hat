@@ -1,6 +1,5 @@
 /*
 {
-   
    "_id": objectID,
   "noise": 4,
   "airQuality": 2,
@@ -15,120 +14,156 @@ import {ObjectId} from 'mongodb';
 import validation from './validation.js';
 
 let exportedMethods = {
-    //return all ratings
-     async getAllRatings(){
-            const ratingCollection = await ratings();
-            return await ratingCollection.find({}).toArray();
-        },
-    //query ratings by id
+    // return all ratings
+    async getAllRatings() {
+        const ratingCollection = await ratings();
+        return await ratingCollection.find({}).toArray();
+    },
+
+    // query rating by id
     async getRatingByID(id) {
         id = validation.checkId(id);
         const ratingCollection = await ratings();
         const rating = await ratingCollection.findOne({_id: new ObjectId(id)});
-        if (!rating) throw 'Error: User not found';
+        if (!rating) throw 'Error: Rating not found';
         return rating;
     },
-    //remove one rating by Id
+
+    // remove one rating by id
     async removeRating(id) {
         id = validation.checkId(id);
         const ratingCollection = await ratings();
         const deletionInfo = await ratingCollection.findOneAndDelete({
-        _id: new ObjectId(id)
+            _id: new ObjectId(id)
         });
-        if (!deletionInfo) throw `Error: Could not delete user with id of ${id}`;
-
-    return {...deletionInfo, deleted: true};
+        if (!deletionInfo) throw `Error: Could not delete rating with id of ${id}`;
+        return {...deletionInfo, deleted: true};
     },
-    //add complete set of ratings
-    async addAllRatings(noiseRating, airQuality, constructionSize, workHours){
-        noiseRating = validation.validateeRating(noiseRating)
-        airQuality = validation.validateeRating(airQuality)
-        constructionSize = validation.validateeRating(constructionSize)
-        workHours = validation.validateeRating(workHours)
+
+    // add a complete set of ratings
+    async addAllRatings(noise, airQuality, constructionSize, workHours) {
+        noise = validation.validateRating(noise);
+        airQuality = validation.validateRating(airQuality);
+        constructionSize = validation.validateRating(constructionSize);
+        workHours = validation.validateRating(workHours);
 
         let newRating = {
-            noiseRating,
+            noise,
             airQuality,
             constructionSize,
             workHours
-        }
+        };
 
         const ratingCollection = await ratings();
         const newInsertInformation = await ratingCollection.insertOne(newRating);
         if (!newInsertInformation.insertedId) throw 'Insert failed!';
         return await this.getRatingByID(newInsertInformation.insertedId.toString());
-
-    },  
-    async updateNoise(id, noiseRating){
-        id = validation.checkId(id);
-        noiseRating = validation.validateeRating(noiseRating)
-
-        const updatedNoise = { noiseRating}
-
-        const ratingCollection = await ratings()
-        const updateInfo = ratingCollection.findOneAndUpdate({
-        _id: new ObjectId(id)},
-        {$set: updatedNoise},
-        {returnDocument: 'after'})
-        
-       if (!updateInfo) throw 'Error: Update failed';
-
-        return await updateInfo;
-
     },
 
-   async updateAirQuality(id, airQuality){
+    async updateNoise(id, noise) {
         id = validation.checkId(id);
-        airQuality = validation.validateeRating(airQuality)
+        noise = validation.validateRating(noise);
 
-        const updatedAirQuality = { airQuality}
-
-        const ratingCollection = await ratings()
-        const updateInfo = ratingCollection.findOneAndUpdate({
-        _id: new ObjectId(id)},
-        {$set: updatedAirQuality},
-        {returnDocument: 'after'})
-        
-       if (!updateInfo) throw 'Error: Update failed';
-
-        return await updateInfo;
-
+        const ratingCollection = await ratings();
+        const updateInfo = await ratingCollection.findOneAndUpdate(
+            {_id: new ObjectId(id)},
+            {$set: {noise}},
+            {returnDocument: 'after'}
+        );
+        if (!updateInfo) throw 'Error: Update failed';
+        return updateInfo;
     },
 
-    async updateConstructionSize(id, constructionSize){
+    async updateAirQuality(id, airQuality) {
         id = validation.checkId(id);
-        constructionSize = validation.validateeRating(noiseRating)
+        airQuality = validation.validateRating(airQuality);
 
-        const updateConstructionSize = { constructionSize}
-
-        const ratingCollection = await ratings()
-        const updateInfo = ratingCollection.findOneAndUpdate({
-        _id: new ObjectId(id)},
-        {$set: updateConstructionSize},
-        {returnDocument: 'after'})
-        
-       if (!updateInfo) throw 'Error: Update failed';
-
-        return await updateInfo;
-
+        const ratingCollection = await ratings();
+        const updateInfo = await ratingCollection.findOneAndUpdate(
+            {_id: new ObjectId(id)},
+            {$set: {airQuality}},
+            {returnDocument: 'after'}
+        );
+        if (!updateInfo) throw 'Error: Update failed';
+        return updateInfo;
     },
 
-    async updateWorkHours(id, workHours){
+    async updateConstructionSize(id, constructionSize) {
         id = validation.checkId(id);
-        workHours = validation.validateeRating(workHours)
+        constructionSize = validation.validateRating(constructionSize);
 
-        const updatedWorkHours = { workHours}
-
-        const ratingCollection = await ratings()
-        const updateInfo = ratingCollection.findOneAndUpdate({
-        _id: new ObjectId(id)},
-        {$set: updatedWorkHours},
-        {returnDocument: 'after'})
-        
-       if (!updateInfo) throw 'Error: Update failed';
-
-        return await updateInfo;
+        const ratingCollection = await ratings();
+        const updateInfo = await ratingCollection.findOneAndUpdate(
+            {_id: new ObjectId(id)},
+            {$set: {constructionSize}},
+            {returnDocument: 'after'}
+        );
+        if (!updateInfo) throw 'Error: Update failed';
+        return updateInfo;
     },
-}
+
+    async updateWorkHours(id, workHours) {
+        id = validation.checkId(id);
+        workHours = validation.validateRating(workHours);
+
+        const ratingCollection = await ratings();
+        const updateInfo = await ratingCollection.findOneAndUpdate(
+            {_id: new ObjectId(id)},
+            {$set: {workHours}},
+            {returnDocument: 'after'}
+        );
+        if (!updateInfo) throw 'Error: Update failed';
+        return updateInfo;
+    },
+
+    // patch method to update ratings
+    async updateRatingsPatch(id, ratingsUpdate) {
+        id = validation.checkId(id);
+        if (ratingsUpdate.noise)
+            ratingsUpdate.noise = validation.validateRating(ratingsUpdate.noise);
+        if (ratingsUpdate.airQuality)
+            ratingsUpdate.airQuality = validation.validateRating(ratingsUpdate.airQuality);
+        if (ratingsUpdate.constructionSize)
+            ratingsUpdate.constructionSize = validation.validateRating(ratingsUpdate.constructionSize);
+        if (ratingsUpdate.workHours)
+            ratingsUpdate.workHours = validation.validateRating(ratingsUpdate.workHours);
+
+        const ratingCollection = await ratings();
+        const updateInfo = await ratingCollection.findOneAndUpdate(
+            {_id: new ObjectId(id)},
+            {$set: ratingsUpdate},
+            {returnDocument: 'after'}
+        );
+        if (!updateInfo)
+            throw `Error: Update failed, could not find a rating with id of ${id}`;
+        return updateInfo;
+    },
+
+    // put method for ratings
+    async updateRatingPut(id, ratingsUpdate) {
+        id = validation.checkId(id);
+        ratingsUpdate.noise = validation.validateRating(ratingsUpdate.noise);
+        ratingsUpdate.airQuality = validation.validateRating(ratingsUpdate.airQuality);
+        ratingsUpdate.constructionSize = validation.validateRating(ratingsUpdate.constructionSize);
+        ratingsUpdate.workHours = validation.validateRating(ratingsUpdate.workHours);
+
+        let updatedRatingData = {
+            noise: ratingsUpdate.noise,
+            airQuality: ratingsUpdate.airQuality,
+            constructionSize: ratingsUpdate.constructionSize,
+            workHours: ratingsUpdate.workHours
+        };
+
+        const ratingCollection = await ratings();
+        const updateInfo = await ratingCollection.findOneAndReplace(
+            {_id: new ObjectId(id)},
+            updatedRatingData,
+            {returnDocument: 'after'}
+        );
+        if (!updateInfo)
+            throw `Error: Update failed! Could not update rating with id ${id}`;
+        return updateInfo;
+    }
+};
 
 export default exportedMethods;
