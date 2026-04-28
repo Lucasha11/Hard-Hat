@@ -5,21 +5,31 @@ import validation from './validation.js';
 
 export const usersDataFunctions = {
 
-    async createUser(firstName, lastName, email, password, profileImageUrl, homeBorough) {
-        if (!firstName || !lastName || !email || !password)
-            throw 'Error: firstName, lastName, email, and password are required';
+    async createUser(firstName, lastName, email, username, password, profileImageUrl, homeBorough) {
+        if (!firstName || !lastName || !email || !username || !password)
+            throw 'Error: firstName, lastName, email, username, and password are required';
 
         firstName = validation.validateName(firstName);
         lastName = validation.validateName(lastName);
         email = validation.validateEmail(email);
+        username = validation.validateUsername(username);
         password = validation.validatePassword(password);
         profileImageUrl = validation.validateImage(profileImageUrl);
         if (homeBorough) homeBorough = validation.validateBorough(homeBorough);
+
+        const userCollection = await users();
+
+        const existing = await userCollection.findOne(
+            {username: username},
+            {collation: {locale: 'en', strength: 2}}
+        );
+        if (existing) throw 'Username must be unique.';
 
         let newUser = {
             firstName,
             lastName,
             email,
+            username,
             hashedPassword: password,
             profileImageUrl: profileImageUrl || null,
             homeBorough: homeBorough || null,
@@ -29,7 +39,6 @@ export const usersDataFunctions = {
             createdAt: new Date()
         };
 
-        const userCollection = await users();
         const newInsertInformation = await userCollection.insertOne(newUser);
         if (!newInsertInformation.insertedId) throw 'Insert failed!';
         return await this.getUserById(newInsertInformation.insertedId.toString());
@@ -46,6 +55,40 @@ export const usersDataFunctions = {
     async getUserByEmail(email) {
         const userCollection = await users();
         return await userCollection.findOne({email: email});
+    },
+
+    async getUserByUsername(username) {
+        username = validation.validateUsername(username);
+        const userCollection = await users();
+        return await userCollection.findOne(
+            {username: username},
+            {collation: {locale: 'en', strength: 2}}
+        );
+    },
+
+    async updateUsername(id, newUsername) {
+        id = validation.checkId(id);
+        newUsername = validation.validateUsername(newUsername);
+
+        const userCollection = await users();
+
+        const existing = await userCollection.findOne(
+            {username: newUsername, _id: {$ne: new ObjectId(id)}},
+            {collation: {locale: 'en', strength: 2}}
+        );
+        if (existing) throw 'Username must be unique.';
+
+        const updated = await userCollection.findOneAndUpdate(
+            {_id: new ObjectId(id)},
+            {$set: {username: newUsername}},
+            {returnDocument: 'after'}
+        );
+        if (!updated) throw `Error: Update failed, could not find a user with id of ${id}`;
+
+        const reviewData = (await import('./reviews.js')).default;
+        await reviewData.updateUsernameOnUserReviews(id, newUsername);
+
+        return updated;
     },
 
     async updateUserPut(id, userInfo) {
@@ -95,6 +138,16 @@ export const usersDataFunctions = {
             userInfo.homeBorough = validation.validateBorough(userInfo.homeBorough);
 
         const userCollection = await users();
+
+        if (userInfo.username) {
+            userInfo.username = validation.validateUsername(userInfo.username);
+            const dup = await userCollection.findOne(
+                {username: userInfo.username, _id: {$ne: new ObjectId(id)}},
+                {collation: {locale: 'en', strength: 2}}
+            );
+            if (dup) throw 'Username must be unique.';
+        }
+
         const updateInfo = await userCollection.findOneAndUpdate(
             {_id: new ObjectId(id)},
             {$set: userInfo},
@@ -102,6 +155,12 @@ export const usersDataFunctions = {
         );
         if (!updateInfo)
             throw `Error: Update failed, could not find a user with id of ${id}`;
+
+        if (userInfo.username) {
+            const reviewData = (await import('./reviews.js')).default;
+            await reviewData.updateUsernameOnUserReviews(id, userInfo.username);
+        }
+
         return updateInfo;
     },
 
