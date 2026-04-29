@@ -1,5 +1,6 @@
 import {users} from '../config/mongoCollections.js';
 import {ObjectId} from 'mongodb';
+import bcrypt from 'bcrypt';
 import validation from './validation.js';
 
 
@@ -199,5 +200,15 @@ export const usersDataFunctions = {
             {_id: new ObjectId(id)},
             {$push: {reportIds: reportId}}
         );
+    },
+
+    async loginUser(username, password) {
+        const user = await this.getUserByUsername(username);
+        if (!user) throw 'Username does not exist.';
+
+        const match = await bcrypt.compare(password, user.hashedPassword);
+        if (!match) throw 'Password is incorrect';
+
+        return user;
     }
 };

@@ -57,6 +57,36 @@ router.route('/register').post(async (req, res) => {
   }
 });
 
+// ── Sign in form ──────────────────────────────────────────────────────────────
+router.route('/signin').get((req, res) => {
+  if (req.session.user) return res.redirect('/');
+  return res.render('auth/signin', { title: 'Sign In' });
+});
+
+// ── Sign in submit (JSON — consumed by AJAX in signin.js) ─────────────────────
+router.route('/signin').post(async (req, res) => {
+  if (req.session.user) return res.json({ success: true });
+
+  const { username, password } = req.body;
+
+  try {
+    const user = await usersDataFunctions.loginUser(username, password);
+
+    req.session.user = {
+      _id: user._id.toString(),
+      firstName: user.firstName,
+      lastName: user.lastName,
+      email: user.email,
+      username: user.username
+    };
+
+    return res.json({ success: true });
+  } catch (e) {
+    const msg = typeof e === 'string' ? e : e.message;
+    return res.status(400).json({ error: msg });
+  }
+});
+
 // ── Sign out ──────────────────────────────────────────────────────────────────
 router.route('/signout').get((req, res) => {
   req.session.destroy(() => res.redirect('/'));
