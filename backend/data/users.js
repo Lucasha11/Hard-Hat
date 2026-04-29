@@ -1,5 +1,6 @@
 import {users} from '../config/mongoCollections.js';
 import {ObjectId} from 'mongodb';
+import bcrypt from 'bcrypt';
 import validation from './validation.js';
 
 
@@ -13,7 +14,7 @@ export const usersDataFunctions = {
         lastName = validation.validateName(lastName);
         email = validation.validateEmail(email);
         username = validation.validateUsername(username);
-        password = validation.validatePassword(password);
+        password = await validation.hashPassword(password);
         profileImageUrl = validation.validateImage(profileImageUrl);
         if (homeBorough) homeBorough = validation.validateBorough(homeBorough);
 
@@ -133,7 +134,7 @@ export const usersDataFunctions = {
         if (userInfo.email)
             userInfo.email = validation.validateEmail(userInfo.email);
         if (userInfo.hashedPassword)
-            userInfo.hashedPassword = validation.validatePassword(userInfo.hashedPassword);
+            userInfo.hashedPassword = await validation.hashPassword(userInfo.hashedPassword);
         if (userInfo.homeBorough)
             userInfo.homeBorough = validation.validateBorough(userInfo.homeBorough);
 
@@ -199,5 +200,15 @@ export const usersDataFunctions = {
             {_id: new ObjectId(id)},
             {$push: {reportIds: reportId}}
         );
+    },
+
+    async loginUser(username, password) {
+        const user = await this.getUserByUsername(username);
+        if (!user) throw 'Username does not exist.';
+
+        const match = await bcrypt.compare(password, user.hashedPassword);
+        if (!match) throw 'Password is incorrect';
+
+        return user;
     }
 };
