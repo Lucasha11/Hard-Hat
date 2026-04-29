@@ -4,5 +4,6 @@ Construction site review app
 
 # To Run the Application
 1. Run **npm install** in terminal
-2. Run **node app.js** in terminal
-3. Navigate to _localhost:3000_ in browser
+2. Run **mongod** in terminal to start mongodb database
+3. Run **node app.js** in terminal
+4. Navigate to _localhost:3000_ in browser
