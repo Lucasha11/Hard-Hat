@@ -52,69 +52,53 @@ router.route('/').get(async (req, res) => {
   }
 });
 
-// ── Site detail: GET /sites/:siteId ───────────────────────────────────────────
-router.route('/sites/:siteId').get(async (req, res) => {
-  const { siteId } = req.params;
-  try {
-    const site = await siteData.getSiteById(siteId);
-    const sortBy = req.query.sort || 'newest';
-    const allReviews = await reviewData.getReviewsBySiteId(siteId, sortBy);
+// ── New review form: GET /reviews/new[?siteId=...] ────────────────────────────
+router.route('/reviews/new').get(requireLogin, async (req, res) => {
+  const siteId = req.query.siteId ? String(req.query.siteId).trim() : '';
 
-    const userId = req.session.user?._id;
-    const reviewList = allReviews.map((r) => ({
-      ...r,
-      _id: r._id.toString(),
-      userId: r.userId.toString(),
-      isOwner: !!(userId && r.userId.toString() === userId)
-    }));
-
-    return res.render('sites/siteDetail', {
-      title: site.schoolName,
-      site: { ...site, _id: site._id.toString() },
-      reviews: reviewList,
-      hasReviews: reviewList.length > 0,
-      sortBy,
-      sortNewest: sortBy === 'newest',
-      sortMostLiked: sortBy === 'most_liked'
-    });
-  } catch (e) {
-    return res
-      .status(404)
-      .render('error', { title: 'Not Found', error: typeof e === 'string' ? e : e.message });
-  }
-});
-
-// ── New review form: GET /sites/:siteId/reviews/new ───────────────────────────
-router.route('/sites/:siteId/reviews/new').get(requireLogin, async (req, res) => {
-  const { siteId } = req.params;
-  try {
-    let site;
-    try {
-      site = await siteData.getSiteById(siteId);
-    } catch (notFound) {
-      // Bootstrap from NYC Open Data on first review attempt for this site.
-      site = await siteData.createSite(siteId);
-    }
+  if (!siteId) {
     return res.render('reviews/createReview', {
       title: 'Write a Review',
+      siteLocked: false,
+      siteId: '',
+      formData: {}
+    });
+  }
+
+  try {
+    const site = await siteData.getSiteById(siteId);
+    return res.render('reviews/createReview', {
+      title: 'Write a Review',
+      siteLocked: true,
       site: { ...site, _id: site._id.toString() },
-      siteId
+      siteId,
+      formData: {}
     });
   } catch (e) {
-    return res
-      .status(404)
-      .render('error', { title: 'Not Found', error: typeof e === 'string' ? e : e.message });
+    return res.status(404).render('reviews/createReview', {
+      title: 'Write a Review',
+      siteLocked: false,
+      siteId,
+      formData: { siteId },
+      error: `Site "${siteId}" was not found in our records. Please request it through the new-site request flow.`
+    });
   }
 });
 
-// ── Create review: POST /sites/:siteId/reviews ────────────────────────────────
-router.route('/sites/:siteId/reviews').post(requireLogin, upload.single('photo'), async (req, res) => {
-  const { siteId } = req.params;
+// ── Create review: POST /reviews ──────────────────────────────────────────────
+router.route('/reviews').post(requireLogin, upload.single('photo'), async (req, res) => {
+  const siteId = req.body.siteId ? String(req.body.siteId).trim() : '';
   const { title, body, noise, airQuality, constructionSize, workHours } = req.body;
   let site;
 
   try {
-    site = await siteData.getSiteById(siteId);
+    if (!siteId) throw 'Site ID is required.';
+
+    try {
+      site = await siteData.getSiteById(siteId);
+    } catch (notFound) {
+      throw `Site "${siteId}" was not found in our records or in NYC Open Data. Please request it through the new-site request flow.`;
+    }
 
     // Parse ratings — form sends strings
     const ratings = {
@@ -131,11 +115,13 @@ router.route('/sites/:siteId/reviews').post(requireLogin, upload.single('photo')
     await reviewData.createReview(siteId, userId, username, ratings, title, body, photoUrls);
     return res.redirect(`/sites/${siteId}`);
   } catch (e) {
+    const errMsg = typeof e === 'string' ? e : e.message;
     return res.status(400).render('reviews/createReview', {
       title: 'Write a Review',
-      site: site ? { ...site, _id: site._id.toString() } : { _id: siteId },
+      siteLocked: !!site,
+      site: site ? { ...site, _id: site._id.toString() } : undefined,
       siteId,
-      error: typeof e === 'string' ? e : e.message,
+      error: errMsg,
       formData: req.body
     });
   }
@@ -241,6 +227,38 @@ router.route('/reviews/:reviewId/delete').post(requireLogin, async (req, res) =>
     const msg = typeof e === 'string' ? e : e.message;
     if (isAjax) return res.status(500).json({ error: msg });
     return res.status(500).render('error', { title: 'Error', error: msg });
+  }
+});
+
+// ── Site detail: GET /sites/:siteId ───────────────────────────────────────────
+router.route('/sites/:siteId').get(async (req, res) => {
+  const { siteId } = req.params;
+  try {
+    const site = await siteData.getSiteById(siteId);
+    const sortBy = req.query.sort || 'newest';
+    const allReviews = await reviewData.getReviewsBySiteId(siteId, sortBy);
+
+    const userId = req.session.user?._id;
+    const reviewList = allReviews.map((r) => ({
+      ...r,
+      _id: r._id.toString(),
+      userId: r.userId.toString(),
+      isOwner: !!(userId && r.userId.toString() === userId)
+    }));
+
+    return res.render('sites/siteDetail', {
+      title: site.schoolName,
+      site: { ...site, _id: site._id.toString() },
+      reviews: reviewList,
+      hasReviews: reviewList.length > 0,
+      sortBy,
+      sortNewest: sortBy === 'newest',
+      sortMostLiked: sortBy === 'most_liked'
+    });
+  } catch (e) {
+    return res
+      .status(404)
+      .render('error', { title: 'Not Found', error: typeof e === 'string' ? e : e.message });
   }
 });
 
