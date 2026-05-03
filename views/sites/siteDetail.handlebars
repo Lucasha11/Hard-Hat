@@ -52,7 +52,7 @@
         </form>
 
         {{#if isLoggedIn}}
-          <a href="/sites/{{site._id}}/reviews/new" class="btn btn--primary">Write a Review</a>
+          <a href="/reviews/new?siteId={{site._id}}" class="btn btn--primary">Write a Review</a>
         {{else}}
           <a href="/signin" class="btn btn--secondary">Sign in to review</a>
         {{/if}}
@@ -105,7 +105,7 @@
       <div class="no-reviews card">
         <p>No reviews yet. Be the first to share your experience!</p>
         {{#if isLoggedIn}}
-          <a href="/sites/{{site._id}}/reviews/new" class="btn btn--primary">Write a Review</a>
+          <a href="/reviews/new?siteId={{site._id}}" class="btn btn--primary">Write a Review</a>
         {{else}}
           <a href="/signin" class="btn btn--secondary">Sign in to write the first review</a>
         {{/if}}

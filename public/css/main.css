@@ -104,6 +104,29 @@ img { max-width: 100%; }
 .btn--danger    { background: #d93025; color: #fff; }
 .btn--small     { padding: 0.3rem 0.7rem; font-size: 0.8rem; }
 
+.btn--hazard {
+  position: relative;
+  isolation: isolate;
+  background: repeating-linear-gradient(
+    135deg,
+    #f5c400 0 12px,
+    #1a1a1a 12px 24px
+  );
+  color: #1a1a1a;
+  font-weight: 700;
+  padding: 0.5rem 1.1rem;
+  border-radius: 5px;
+  letter-spacing: 0.02em;
+}
+.btn--hazard::before {
+  content: "";
+  position: absolute;
+  inset: 5px 6px;
+  background: #f5c400;
+  border-radius: 3px;
+  z-index: -1;
+}
+
 /* ── Alerts ────────────────────────────────────────────────────────────────── */
 .alert {
   padding: 0.85rem 1rem;

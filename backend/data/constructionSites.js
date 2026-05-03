@@ -81,13 +81,34 @@ const exportedMethods = {
     return await this.getSiteById(siteId);
   },
 
-  // GET — strict read from the local collection.
+  // GET — reads the local collection first; on miss, validates against the NYC
+  // Open Data dataset and bootstraps a local doc so subsequent reads are cheap
+  // and aggregate fields (averageRatings, reviewCount, likeCount) stay coherent.
+  // Throws only if the siteId is missing from BOTH sources.
   async getSiteById(siteId) {
     siteId = validation.validateSiteId(siteId);
     const sitesCollection = await constructionSites();
-    const site = await sitesCollection.findOne({ _id: siteId });
-    if (!site) throw `Error: No construction site found with id '${siteId}'`;
-    return site;
+
+    const local = await sitesCollection.findOne({ _id: siteId });
+    if (local) return local;
+
+    let cityRecord;
+    try {
+      cityRecord = await fetchFromCityDataset(siteId);
+    } catch (e) {
+      throw `Error: No construction site found with id '${siteId}' in local DB or NYC Open Data`;
+    }
+
+    const newSite = shapeFromCityRecord(cityRecord);
+    try {
+      await sitesCollection.insertOne(newSite);
+    } catch (e) {
+      // Tolerate a race where a concurrent first-time request inserted first.
+      if (!(e && e.code === 11000)) throw e;
+    }
+    const bootstrapped = await sitesCollection.findOne({ _id: siteId });
+    if (!bootstrapped) throw `Error: Failed to bootstrap construction site '${siteId}'`;
+    return bootstrapped;
   },
 
   // PUT — full replace of all editable site fields. Preserves _id, source, createdAt,
