@@ -75,7 +75,7 @@
 
   function buildEmptyState() {
     const link = currentUserId
-      ? `<a href="/sites/${siteId}/reviews/new" class="btn btn--primary">Write a Review</a>`
+      ? `<a href="/reviews/new?siteId=${encodeURIComponent(siteId)}" class="btn btn--primary">Write a Review</a>`
       : `<a href="/signin" class="btn btn--secondary">Sign in to write the first review</a>`;
     return `<div class="no-reviews card">
               <p>No reviews yet. Be the first to share your experience!</p>
