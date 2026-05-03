@@ -56,13 +56,9 @@ const exportedMethods = {
 
     if (!Array.isArray(photoUrls)) photoUrls = [];
 
-    // Validate the siteId against the NYC Open Data dataset and bootstrap
-    // a local construction site doc if one doesn't exist yet.
-    try {
-      await siteData.getSiteById(siteId);
-    } catch (e) {
-      await siteData.createSite(siteId);
-    }
+    // getSiteById auto-bootstraps from NYC Open Data on local miss; throws only
+    // when the siteId is absent from both sources.
+    await siteData.getSiteById(siteId);
 
     const newReview = {
       siteId,

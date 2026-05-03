@@ -1,16 +1,48 @@
 <div class="form-page">
   <div class="form-header">
-    <a href="/sites/{{siteId}}" class="back-link">&larr; Back to {{site.schoolName}}</a>
-    <h1 class="form-title">Write a Review</h1>
-    <p class="form-subtitle">{{site.buildingAddress}}, {{site.borough}}</p>
+    {{#if siteLocked}}
+      <a href="/sites/{{site._id}}" class="back-link">&larr; Back to {{site.schoolName}}</a>
+      <h1 class="form-title">Write a Review</h1>
+      <p class="form-subtitle">{{site.buildingAddress}}, {{site.borough}}</p>
+    {{else}}
+      <a href="/" class="back-link">&larr; Back to home</a>
+      <h1 class="form-title">Write a Review</h1>
+      <p class="form-subtitle">Enter the site ID for the construction site you want to review.</p>
+    {{/if}}
   </div>
 
   {{#if error}}
     <div class="alert alert--error">{{error}}</div>
   {{/if}}
 
-  <form method="POST" action="/sites/{{siteId}}/reviews"
+  <form method="POST" action="/reviews"
         enctype="multipart/form-data" class="review-form card">
+
+    {{! Site ID }}
+    <div class="form-group">
+      <label for="siteId" class="form-label">Site ID <span class="required">*</span></label>
+      {{#if siteLocked}}
+        <input
+          type="text"
+          id="siteId-display"
+          class="form-input"
+          value="{{site._id}} — {{site.schoolName}}"
+          readonly
+        />
+        <input type="hidden" name="siteId" value="{{site._id}}" />
+      {{else}}
+        <input
+          type="text"
+          id="siteId"
+          name="siteId"
+          class="form-input"
+          placeholder="e.g. M165"
+          value="{{formData.siteId}}"
+          required
+        />
+        <p class="form-hint">Don't see your site? You'll need to request it via the new-site request flow.</p>
+      {{/if}}
+    </div>
 
     {{! Title }}
     <div class="form-group">
@@ -101,7 +133,11 @@
     </div>
 
     <div class="form-actions">
-      <a href="/sites/{{siteId}}" class="btn btn--secondary">Cancel</a>
+      {{#if siteLocked}}
+        <a href="/sites/{{site._id}}" class="btn btn--secondary">Cancel</a>
+      {{else}}
+        <a href="/" class="btn btn--secondary">Cancel</a>
+      {{/if}}
       <button type="submit" class="btn btn--primary">Submit Review</button>
     </div>
   </form>
