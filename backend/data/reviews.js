@@ -184,6 +184,39 @@ const exportedMethods = {
     );
   },
 
+  async getTotalReviewCount() {
+    const reviewsCollection = await reviews();
+    return reviewsCollection.countDocuments({});
+  },
+
+  async getRecentReviews(page = 1, limit = 5) {
+    const reviewsCollection = await reviews();
+    const skip = (page - 1) * limit;
+    const results = await reviewsCollection
+      .find({})
+      .sort({ createdAt: -1 })
+      .skip(skip)
+      .limit(limit)
+      .toArray();
+
+    return Promise.all(
+      results.map(async (r) => {
+        try {
+          const site = await siteData.getSiteById(r.siteId);
+          return {
+            ...r,
+            schoolName: site.schoolName,
+            buildingAddress: site.buildingAddress,
+            borough: site.borough,
+            postcode: site.postcode
+          };
+        } catch {
+          return r;
+        }
+      })
+    );
+  },
+
   async deleteReview(reviewId, userId) {
     reviewId = validation.checkId(reviewId);
     userId = validation.checkId(userId);

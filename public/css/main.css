@@ -321,6 +321,65 @@ img { max-width: 100%; }
 .error-heading { font-size: 1.8rem; font-weight: 700; margin-bottom: 1rem; }
 .error-message { color: #666; font-size: 1rem; margin-bottom: 2rem; }
 
+/* ── Review card site info (homepage) ─────────────────────────────────────── */
+.review-card__site {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+  margin-bottom: 0.6rem;
+}
+.review-card__site-name {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #d93025;
+}
+.review-card__site-name:hover { text-decoration: underline; }
+.review-card__site-address {
+  font-size: 0.8rem;
+  color: #777;
+}
+
+/* ── Pagination ────────────────────────────────────────────────────────────── */
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+  margin-top: 1.75rem;
+}
+
+.pagination__item {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.2rem;
+  height: 2.2rem;
+  border-radius: 6px;
+  font-size: 0.95rem;
+  color: #555;
+  text-decoration: none;
+  transition: background 0.12s, color 0.12s;
+}
+.pagination__item:hover {
+  background: #e8e8e0;
+  text-decoration: none;
+  color: #1a1a1a;
+}
+
+.pagination__item--active {
+  background: #d93025;
+  color: #fff;
+  font-weight: 600;
+  pointer-events: none;
+}
+
+.pagination__arrow { font-size: 1.2rem; }
+.pagination__arrow--disabled {
+  color: #ccc;
+  cursor: default;
+  pointer-events: none;
+}
+
 /* ── AJAX states ───────────────────────────────────────────────────────────── */
 
 /* Sort: dim the list while a fetch is in flight */
