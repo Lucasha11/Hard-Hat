@@ -9,3 +9,39 @@
     <a href="/sites/M164">/sites/M164</a>).
   </p>
 </div>
+
+<div class="reviews-section">
+  <div class="reviews-header">
+    <h2 class="section-title">Recent Community Reviews</h2>
+  </div>
+
+  {{#if hasReviews}}
+    <div class="review-list">
+      {{#each recentReviews}}
+        {{> reviewCard}}
+      {{/each}}
+    </div>
+
+    <nav class="pagination" aria-label="Review pages">
+      {{#if paginator.hasPrev}}
+        <a href="{{paginator.prevUrl}}" class="pagination__item pagination__arrow" aria-label="Previous">&#8249;</a>
+      {{else}}
+        <span class="pagination__item pagination__arrow pagination__arrow--disabled" aria-disabled="true">&#8249;</span>
+      {{/if}}
+
+      {{#each paginator.pages}}
+        <a href="{{url}}" class="pagination__item{{#if isActive}} pagination__item--active{{/if}}" aria-label="Page {{num}}"{{#if isActive}} aria-current="page"{{/if}}>{{num}}</a>
+      {{/each}}
+
+      {{#if paginator.hasNext}}
+        <a href="{{paginator.nextUrl}}" class="pagination__item pagination__arrow" aria-label="Next">&#8250;</a>
+      {{else}}
+        <span class="pagination__item pagination__arrow pagination__arrow--disabled" aria-disabled="true">&#8250;</span>
+      {{/if}}
+    </nav>
+  {{else}}
+    <div class="no-reviews card">
+      <p>No reviews have been posted yet. Be the first to share your experience!</p>
+    </div>
+  {{/if}}
+</div>
