@@ -45,8 +45,45 @@ const router = Router();
 
 // ── Home ──────────────────────────────────────────────────────────────────────
 router.route('/').get(async (req, res) => {
+  const LIMIT = 5;
+  const MAX_PAGES = 9;
+
   try {
-    return res.render('home', { title: 'Hard Hat — NYC Construction Reviews' });
+    const [totalReviews, sessionUserId] = await Promise.all([
+      reviewData.getTotalReviewCount(),
+      Promise.resolve(req.session.user?._id)
+    ]);
+
+    const totalPages = Math.min(MAX_PAGES, Math.ceil(totalReviews / LIMIT));
+    let page = parseInt(req.query.page, 10) || 1;
+    if (page < 1 || (totalPages > 0 && page > totalPages)) return res.redirect('/');
+
+    const rawReviews = await reviewData.getRecentReviews(page, LIMIT);
+    const recentReviews = rawReviews.map((r) => ({
+      ...r,
+      _id: r._id.toString(),
+      userId: r.userId.toString(),
+      isOwner: !!(sessionUserId && r.userId.toString() === sessionUserId)
+    }));
+
+    const pages = Array.from({ length: totalPages }, (_, i) => ({
+      num: i + 1,
+      isActive: i + 1 === page,
+      url: `/?page=${i + 1}`
+    }));
+
+    return res.render('home', {
+      title: 'Hard Hat — NYC Construction Reviews',
+      recentReviews,
+      hasReviews: recentReviews.length > 0,
+      paginator: {
+        pages,
+        hasPrev: page > 1,
+        hasNext: page < totalPages,
+        prevUrl: `/?page=${page - 1}`,
+        nextUrl: `/?page=${page + 1}`
+      }
+    });
   } catch (e) {
     return res.status(500).render('error', { title: 'Error', error: e.toString() });
   }
