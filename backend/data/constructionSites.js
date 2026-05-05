@@ -162,6 +162,57 @@ const exportedMethods = {
     return updated;
   },
 
+  // Full-text search across site fields and review titles.
+  // Returns up to 10 results as { siteId, label, sublabel } objects.
+  async searchSites(query) {
+    if (!query || typeof query !== 'string' || query.trim().length === 0)
+      throw 'Error: search query is required';
+    query = query.trim();
+
+    const regex = new RegExp(query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'i');
+
+    const sitesCollection = await constructionSites();
+    const reviewsCollection = await reviews();
+
+    const siteDocs = await sitesCollection
+      .find({
+        $or: [
+          { _id: regex },
+          { schoolName: regex },
+          { buildingAddress: regex },
+          { borough: regex },
+          { projectDescription: regex }
+        ]
+      })
+      .limit(10)
+      .toArray();
+
+    const seen = new Set(siteDocs.map((s) => s._id));
+
+    const matchedReviews = await reviewsCollection
+      .find({ title: regex }, { projection: { siteId: 1 } })
+      .limit(20)
+      .toArray();
+
+    const reviewSiteIds = [...new Set(matchedReviews.map((r) => r.siteId))].filter(
+      (id) => !seen.has(id)
+    );
+
+    if (reviewSiteIds.length > 0 && siteDocs.length < 10) {
+      const extraSites = await sitesCollection
+        .find({ _id: { $in: reviewSiteIds } })
+        .limit(10 - siteDocs.length)
+        .toArray();
+      for (const s of extraSites) siteDocs.push(s);
+    }
+
+    return siteDocs.slice(0, 10).map((s) => ({
+      siteId: s._id,
+      label: s.buildingAddress || s.schoolName || s._id,
+      sublabel: s.borough || s.projectDescription || null
+    }));
+  },
+
   // Recomputes averageRatings and reviewCount from the live reviews collection.
   async updateSiteStats(siteId) {
     siteId = validation.validateSiteId(siteId);
