@@ -1,0 +1,113 @@
+<div class="profile-page">
+
+  {{! ── Profile header ── }}
+  <div class="profile-header card">
+    <div class="profile-header__avatar">
+      {{#if profileUser.profileImageUrl}}
+        <img src="{{profileUser.profileImageUrl}}" alt="Profile photo" class="profile-avatar" />
+      {{else}}
+        <div class="profile-avatar-placeholder">{{profileUser.firstName.[0]}}{{profileUser.lastName.[0]}}</div>
+      {{/if}}
+    </div>
+    <div class="profile-header__info">
+      <h1 class="profile-name">{{profileUser.firstName}} {{profileUser.lastName}}</h1>
+      <p class="profile-username">@{{profileUser.username}}</p>
+      {{#if profileUser.homeBorough}}
+        <p class="profile-borough">📍 {{profileUser.homeBorough}}</p>
+      {{/if}}
+      <p class="profile-joined">Member since {{formatDate profileUser.createdAt}}</p>
+    </div>
+    <div class="profile-header__actions">
+      <a href="/profile/edit" class="btn btn--secondary">Edit Profile</a>
+    </div>
+  </div>
+
+  {{! ── Stats strip ── }}
+  <div class="profile-stats-strip">
+    <div class="profile-stat">
+      <span class="profile-stat__value">{{reviewCount}}</span>
+      <span class="profile-stat__label">Reviews</span>
+    </div>
+    <div class="profile-stat">
+      <span class="profile-stat__value">{{savedCount}}</span>
+      <span class="profile-stat__label">Saved Sites</span>
+    </div>
+  </div>
+
+  {{! ── My Reviews ── }}
+  <section class="profile-section">
+    <h2 class="section-title">My Reviews</h2>
+    {{#if hasReviews}}
+      <div class="review-list">
+        {{#each reviews}}
+        <div class="review-card card" data-review-id="{{_id}}">
+          <div class="review-card__header">
+            <h3 class="review-title">
+              <a href="/sites/{{siteId}}" class="review-title-link">{{title}}</a>
+            </h3>
+            <span class="review-date">{{formatDate createdAt}}</span>
+          </div>
+          <p class="review-site-ref">Site: <a href="/sites/{{siteId}}">{{siteId}}</a></p>
+
+          <div class="review-ratings">
+            <span class="rating-badge">Noise: {{ratings.noise}}/5</span>
+            <span class="rating-badge">Air: {{ratings.airQuality}}/5</span>
+            <span class="rating-badge">Size: {{ratings.constructionSize}}/5</span>
+            <span class="rating-badge">Hours: {{ratings.workHours}}/5</span>
+          </div>
+
+          <p class="review-body">{{body}}</p>
+
+          {{#if photoUrls.length}}
+          <div class="review-photos">
+            {{#each photoUrls}}
+              <img src="{{this}}" alt="Review photo" class="review-photo" />
+            {{/each}}
+          </div>
+          {{/if}}
+
+          <div class="review-footer">
+            <span class="like-count">&#9829; {{likeCount}}</span>
+            <div class="review-actions">
+              <a href="/reviews/{{_id}}/edit" class="btn btn--small btn--secondary">Edit</a>
+              <form method="POST" action="/reviews/{{_id}}/delete"
+                    class="delete-form" data-review-id="{{_id}}">
+                <button type="submit" class="btn btn--small btn--danger">Delete</button>
+              </form>
+            </div>
+          </div>
+        </div>
+        {{/each}}
+      </div>
+    {{else}}
+      <div class="no-reviews card">
+        <p>You haven't written any reviews yet.</p>
+        <a href="/reviews/new" class="btn btn--primary">Write Your First Review</a>
+      </div>
+    {{/if}}
+  </section>
+
+  {{! ── Saved Sites ── }}
+  <section class="profile-section">
+    <h2 class="section-title">Saved Sites</h2>
+    {{#if hasSavedSites}}
+      <div class="saved-sites-grid">
+        {{#each savedSites}}
+        <a href="/sites/{{_id}}" class="saved-site-card card">
+          <h3 class="saved-site-card__name">{{schoolName}}</h3>
+          <p class="saved-site-card__address">{{buildingAddress}}</p>
+          <p class="saved-site-card__borough">{{borough}}</p>
+          <span class="saved-site-card__reviews">{{reviewCount}} review{{#unless (eq reviewCount 1)}}s{{/unless}}</span>
+        </a>
+        {{/each}}
+      </div>
+    {{else}}
+      <div class="no-reviews card">
+        <p>No saved sites yet. Visit a site page to save it for quick access.</p>
+      </div>
+    {{/if}}
+  </section>
+
+</div>
+
+<script src="/js/siteDetail.js"></script>
