@@ -1,5 +1,5 @@
 import {ObjectId} from 'mongodb';
-import bcrypt from 'bcrypt';
+import bcrypt from 'bcryptjs';
 let saltRounds = 16;
 
 

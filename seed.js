@@ -5,7 +5,7 @@
  */
 
 import { dbConnection, closeConnection } from './backend/config/mongoConnections.js';
-import bcrypt from 'bcrypt';
+import bcrypt from 'bcryptjs';
 
 const SITE_ID = 'M164-TEST';
 const USER_EMAIL = 'tester@hardhat.dev';
