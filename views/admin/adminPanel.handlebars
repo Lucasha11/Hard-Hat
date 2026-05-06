@@ -1,0 +1,119 @@
+<section class="page-section">
+  <header class="page-header">
+    <h1 class="page-title">Admin Panel</h1>
+    <p class="page-subtitle">
+      Review pending construction site submissions and user reports.
+    </p>
+  </header>
+
+  <div class="summary-grid">
+    <div class="summary-card">
+      <h2>{{pendingSiteCount}}</h2>
+      <p>Pending Sites</p>
+    </div>
+
+    <div class="summary-card">
+      <h2>{{pendingReportCount}}</h2>
+      <p>Pending Reports</p>
+    </div>
+  </div>
+
+  <section class="activity-section">
+    <h2 class="section-title">Pending Construction Sites</h2>
+
+    {{#if hasPendingSites}}
+      <div class="card-list">
+        {{#each pendingSites}}
+          <article class="content-card">
+            <h3>
+              {{#if this.buildingAddress}}
+                {{this.buildingAddress}}
+              {{else}}
+                Construction Site
+              {{/if}}
+            </h3>
+
+            <p>
+              {{#if this.schoolName}}
+                {{this.schoolName}}
+              {{else}}
+                No school name listed.
+              {{/if}}
+            </p>
+
+            <dl class="details-list">
+              <dt>Site ID</dt>
+              <dd>{{this._id}}</dd>
+
+              <dt>Borough</dt>
+              <dd>{{#if this.borough}}{{this.borough}}{{else}}Not listed{{/if}}</dd>
+
+              <dt>Project Type</dt>
+              <dd>{{#if this.projectType}}{{this.projectType}}{{else}}Not listed{{/if}}</dd>
+
+              <dt>Description</dt>
+              <dd>{{#if this.projectDescription}}{{this.projectDescription}}{{else}}No description available{{/if}}</dd>
+            </dl>
+
+            <form method="POST" action="/admin/sites/{{this._id}}/approve" class="button-row">
+              <button type="submit" class="btn btn--primary">Approve Site</button>
+            </form>
+          </article>
+        {{/each}}
+      </div>
+    {{else}}
+      <p class="empty-message">There are no pending construction sites.</p>
+    {{/if}}
+  </section>
+
+  <section class="activity-section">
+    <h2 class="section-title">Pending Reports</h2>
+
+    {{#if hasPendingReports}}
+      <div class="card-list">
+        {{#each pendingReports}}
+          <article class="content-card">
+            <h3>
+              {{#if this.title}}
+                {{this.title}}
+              {{else}}
+                Report
+              {{/if}}
+            </h3>
+
+            {{#if this.description}}
+              <p>{{this.description}}</p>
+            {{else}}
+              <p>No report description provided.</p>
+            {{/if}}
+
+            <dl class="details-list">
+              <dt>Report ID</dt>
+              <dd>{{this._id}}</dd>
+
+              <dt>Status</dt>
+              <dd>{{this.status}}</dd>
+
+              {{#if this.siteId}}
+                <dt>Site ID</dt>
+                <dd>{{this.siteId}}</dd>
+              {{/if}}
+            </dl>
+
+            <div class="button-row">
+              <form method="POST" action="/admin/reports/{{this._id}}/approve">
+                <button type="submit" class="btn btn--primary">Approve Report</button>
+              </form>
+
+              <form method="POST" action="/admin/reports/{{this._id}}/reject">
+                <button type="submit" class="btn btn--danger">Reject Report</button>
+              </form>
+            </div>
+          </article>
+        {{/each}}
+      </div>
+    {{else}}
+      <p class="empty-message">There are no pending reports.</p>
+    {{/if}}
+  </section>
+</section>
