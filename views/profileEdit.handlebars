@@ -1,0 +1,57 @@
+<div class="form-page">
+  <div class="form-card card">
+    <h1 class="form-title">Edit Profile</h1>
+
+    {{#if error}}
+      <div class="alert alert--error">{{error}}</div>
+    {{/if}}
+
+    <form method="POST" action="/profile/edit" class="form">
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="firstName" class="form-label">First Name</label>
+          <input
+            type="text"
+            id="firstName"
+            name="firstName"
+            class="form-input"
+            value="{{profileUser.firstName}}"
+            required
+          />
+        </div>
+        <div class="form-group">
+          <label for="lastName" class="form-label">Last Name</label>
+          <input
+            type="text"
+            id="lastName"
+            name="lastName"
+            class="form-input"
+            value="{{profileUser.lastName}}"
+            required
+          />
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="homeBorough" class="form-label">Home Borough <span class="form-optional">(optional)</span></label>
+        <select id="homeBorough" name="homeBorough" class="form-input form-select">
+          <option value="">— Select a borough —</option>
+          <option value="Manhattan" {{#if (eq profileUser.homeBorough "Manhattan")}}selected{{/if}}>Manhattan</option>
+          <option value="Brooklyn" {{#if (eq profileUser.homeBorough "Brooklyn")}}selected{{/if}}>Brooklyn</option>
+          <option value="Queens" {{#if (eq profileUser.homeBorough "Queens")}}selected{{/if}}>Queens</option>
+          <option value="Bronx" {{#if (eq profileUser.homeBorough "Bronx")}}selected{{/if}}>Bronx</option>
+          <option value="Staten Island" {{#if (eq profileUser.homeBorough "Staten Island")}}selected{{/if}}>Staten Island</option>
+        </select>
+      </div>
+
+      <p class="form-note">To change your username or password, please contact support.</p>
+
+      <div class="form-actions">
+        <button type="submit" class="btn btn--primary">Save Changes</button>
+        <a href="/profile" class="btn btn--secondary">Cancel</a>
+      </div>
+
+    </form>
+  </div>
+</div>
