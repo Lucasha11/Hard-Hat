@@ -52,6 +52,66 @@ img { max-width: 100%; }
 .nav-link--cta:hover { background: #e6b800; text-decoration: none; }
 
 .nav-user { color: #fff; font-size: 0.9rem; font-weight: 500; }
+.nav-user-menu {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+}
+
+.nav-user-button {
+  background: transparent;
+  border: none;
+  color: #fff;
+  font: inherit;
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  padding: 0.35rem 0.5rem;
+  border-radius: 4px;
+}
+
+.nav-user-button:hover,
+.nav-user-menu:hover .nav-user-button {
+  background: #2a2a2a;
+}
+
+.nav-user-caret {
+  font-size: 0.75rem;
+  margin-left: 0.25rem;
+}
+
+.nav-user-dropdown {
+  display: none;
+  position: absolute;
+  top: calc(100% + 0.4rem);
+  right: 0;
+  min-width: 160px;
+  background: #fff;
+  color: #1a1a1a;
+  border: 1px solid #e0e0d8;
+  border-radius: 8px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.14);
+  padding: 0.35rem 0;
+  z-index: 300;
+}
+
+.nav-user-menu:hover .nav-user-dropdown,
+.nav-user-menu:focus-within .nav-user-dropdown {
+  display: block;
+}
+
+.nav-user-dropdown__link {
+  display: block;
+  padding: 0.6rem 1rem;
+  color: #1a1a1a;
+  font-size: 0.9rem;
+  text-decoration: none;
+}
+
+.nav-user-dropdown__link:hover {
+  background: #f5f5f0;
+  text-decoration: none;
+}
 
 /* ── Layout ────────────────────────────────────────────────────────────────── */
 .main-content {
@@ -652,3 +712,103 @@ img { max-width: 100%; }
 .form-select { appearance: none; cursor: pointer; }
 .form-optional { font-size: 0.8rem; color: #888; font-weight: 400; }
 .form-note { font-size: 0.82rem; color: #888; margin: 0.5rem 0 1rem; }
+
+/* ── Admin & My Activity Pages ─────────────────────────────────────────────── */
+.page-section {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.page-description {
+  color: #666;
+  font-size: 0.95rem;
+  margin-bottom: 1.5rem;
+}
+
+.summary-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.summary-card {
+  background: #fff;
+  border: 1px solid #e0e0d8;
+  border-radius: 8px;
+  padding: 1.25rem;
+}
+
+.summary-card h2 {
+  font-size: 2rem;
+  color: #d93025;
+  margin-bottom: 0.25rem;
+}
+
+.summary-card p {
+  color: #666;
+  font-size: 0.9rem;
+}
+
+.activity-section {
+  margin-top: 2rem;
+}
+
+.card-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.content-card {
+  background: #fff;
+  border: 1px solid #e0e0d8;
+  border-radius: 8px;
+  padding: 1.5rem;
+}
+
+.content-card h3 {
+  font-size: 1.1rem;
+  margin-bottom: 0.5rem;
+}
+
+.details-list {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  gap: 0.4rem 1rem;
+  margin-top: 1rem;
+  font-size: 0.9rem;
+}
+
+.details-list dt {
+  font-weight: 600;
+  color: #333;
+}
+
+.details-list dd {
+  color: #666;
+  margin: 0;
+}
+
+.empty-message {
+  background: #fff;
+  border: 1px dashed #bbb;
+  border-radius: 8px;
+  color: #666;
+  padding: 1rem;
+}
+
+.button-row {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  margin-top: 1rem;
+}
+
+.notice-card {
+  max-width: 650px;
+  background: #fff;
+  border: 1px solid #e0e0d8;
+  border-radius: 8px;
+  padding: 2rem;
+}

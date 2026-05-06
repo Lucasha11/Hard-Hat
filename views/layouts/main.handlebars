@@ -9,6 +9,7 @@
 <body>
   <nav class="navbar">
     <a href="/" class="nav-logo">Hard Hat</a>
+
     <div class="search-container" role="search">
       <input
         type="search"
@@ -22,11 +23,27 @@
       />
       <ul id="search-dropdown" class="search-dropdown" role="listbox" hidden></ul>
     </div>
+
     <div class="nav-links">
       <a href="/stats" class="nav-link">Statistics</a>
-      <a href="{{#if isLoggedIn}}/reviews/new{{else}}/{{/if}}" class="btn btn--hazard">Submit a Review</a>
+
+      <a href="{{#if isLoggedIn}}/reviews/new{{else}}/{{/if}}" class="btn btn--hazard">
+        Submit a Review
+      </a>
+
       {{#if isLoggedIn}}
-        <a href="/profile" class="nav-link">{{sessionUser.firstName}} {{sessionUser.lastName}}</a>
+        <div class="nav-user-menu">
+          <button type="button" class="nav-user-button">
+            {{sessionUser.firstName}} {{sessionUser.lastName}}
+            <span class="nav-user-caret">▾</span>
+          </button>
+
+          <div class="nav-user-dropdown">
+            <a href="/profile" class="nav-user-dropdown__link">Profile</a>
+            <a href="/my-activity" class="nav-user-dropdown__link">My Activity</a>
+          </div>
+        </div>
+
         <a href="/signout" class="nav-link">Sign Out</a>
       {{else}}
         <a href="/signin" class="nav-link">Sign In</a>
@@ -42,6 +59,7 @@
   <footer class="footer">
     <p>&copy; 2026 Hard Hat &mdash; NYC Construction Reviews</p>
   </footer>
+
   <script src="/js/search.js"></script>
 </body>
 </html>

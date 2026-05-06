@@ -3,6 +3,8 @@ import authRoutes from './auth_routes.js';
 import searchRoutes from './search_routes.js';
 import statsRoutes from './stats_routes.js';
 import profileRoutes from './profile_routes.js';
+import adminRoutes from './admin.js';
+import activityRoutes from './activity.js';
 import devRoutes from './dev_routes.js'; // TODO: remove before production
 
 const constructorMethod = (app) => {
@@ -12,6 +14,8 @@ const constructorMethod = (app) => {
   app.use('/', statsRoutes);
   app.use('/', profileRoutes);
   app.use('/', reviewRoutes);
+  app.use('/admin', adminRoutes);
+  app.use('/my-activity', activityRoutes);
 
   app.use('*path', (req, res) => {
     return res.status(404).render('error', {

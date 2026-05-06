@@ -1,0 +1,98 @@
+<section class="page-section">
+  <header class="page-header">
+    <h1 class="page-title">My Activity</h1>
+    <p class="page-subtitle">
+      View the reviews and reports connected to your account.
+    </p>
+  </header>
+
+  <div class="summary-grid">
+    <div class="summary-card">
+      <h2>{{reviewCount}}</h2>
+      <p>Reviews Submitted</p>
+    </div>
+
+    <div class="summary-card">
+      <h2>{{reportCount}}</h2>
+      <p>Reports Submitted</p>
+    </div>
+  </div>
+
+  <section class="activity-section">
+    <h2 class="section-title">Your Reviews</h2>
+
+    {{#if hasReviews}}
+      <div class="card-list">
+        {{#each reviews}}
+          <article class="content-card">
+            <h3>{{this.title}}</h3>
+            <p>{{this.body}}</p>
+
+            <dl class="details-list">
+              <dt>Site ID</dt>
+              <dd>{{this.siteId}}</dd>
+
+              <dt>Noise</dt>
+              <dd>{{this.ratings.noise}}</dd>
+
+              <dt>Air Quality</dt>
+              <dd>{{this.ratings.airQuality}}</dd>
+
+              <dt>Construction Size</dt>
+              <dd>{{this.ratings.constructionSize}}</dd>
+
+              <dt>Work Hours</dt>
+              <dd>{{this.ratings.workHours}}</dd>
+
+              <dt>Likes</dt>
+              <dd>{{this.likeCount}}</dd>
+            </dl>
+          </article>
+        {{/each}}
+      </div>
+    {{else}}
+      <p class="empty-message">You have not submitted any reviews yet.</p>
+    {{/if}}
+  </section>
+
+  <section class="activity-section">
+    <h2 class="section-title">Your Reports</h2>
+
+    {{#if hasReports}}
+      <div class="card-list">
+        {{#each reports}}
+          <article class="content-card">
+            <h3>
+              {{#if this.title}}
+                {{this.title}}
+              {{else}}
+                Report
+              {{/if}}
+            </h3>
+
+            {{#if this.description}}
+              <p>{{this.description}}</p>
+            {{else}}
+              <p>No report description provided.</p>
+            {{/if}}
+
+            <dl class="details-list">
+              <dt>Report ID</dt>
+              <dd>{{this._id}}</dd>
+
+              <dt>Status</dt>
+              <dd>{{this.status}}</dd>
+
+              {{#if this.siteId}}
+                <dt>Site ID</dt>
+                <dd>{{this.siteId}}</dd>
+              {{/if}}
+            </dl>
+          </article>
+        {{/each}}
+      </div>
+    {{else}}
+      <p class="empty-message">You have not submitted any construction site reports yet.</p>
+    {{/if}}
+  </section>
+</section>
