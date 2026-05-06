@@ -1,0 +1,144 @@
+<div class="stats-page">
+
+  <div class="page-header">
+    <h1 class="page-title">Construction Site Statistics</h1>
+    <p class="page-subtitle">Aggregated data from community reviews across all NYC construction sites.</p>
+  </div>
+
+  {{! ── Overall summary cards ── }}
+  <div class="stats-summary-grid">
+    <div class="stat-card card">
+      <span class="stat-card__value">{{overall.totalSites}}</span>
+      <span class="stat-card__label">Sites Tracked</span>
+    </div>
+    <div class="stat-card card">
+      <span class="stat-card__value">{{overall.totalReviews}}</span>
+      <span class="stat-card__label">Total Reviews</span>
+    </div>
+    <div class="stat-card card">
+      <span class="stat-card__value">{{overall.overallRatings.noise}}<span class="stat-card__unit">/5</span></span>
+      <span class="stat-card__label">Avg Noise Rating</span>
+    </div>
+    <div class="stat-card card">
+      <span class="stat-card__value">{{overall.overallRatings.airQuality}}<span class="stat-card__unit">/5</span></span>
+      <span class="stat-card__label">Avg Air Quality Rating</span>
+    </div>
+    <div class="stat-card card">
+      <span class="stat-card__value">{{overall.overallRatings.constructionSize}}<span class="stat-card__unit">/5</span></span>
+      <span class="stat-card__label">Avg Construction Size</span>
+    </div>
+    <div class="stat-card card">
+      <span class="stat-card__value">{{overall.overallRatings.workHours}}<span class="stat-card__unit">/5</span></span>
+      <span class="stat-card__label">Avg Work Hours Rating</span>
+    </div>
+  </div>
+
+  <div class="stats-columns">
+
+    {{! ── Left column ── }}
+    <div class="stats-col">
+
+      {{! Most-reviewed sites }}
+      <section class="stats-section card">
+        <h2 class="card-title">Most Reviewed Sites</h2>
+        {{#if hasTopReviewed}}
+          <ol class="stats-ranked-list">
+            {{#each topReviewed}}
+            <li class="stats-ranked-item">
+              <a href="/sites/{{_id}}" class="stats-ranked-item__link">
+                <span class="stats-ranked-item__name">{{schoolName}}</span>
+                <span class="stats-ranked-item__meta">{{buildingAddress}}, {{borough}}</span>
+              </a>
+              <span class="stats-ranked-item__badge">{{reviewCount}} review{{#unless (eq reviewCount 1)}}s{{/unless}}</span>
+            </li>
+            {{/each}}
+          </ol>
+        {{else}}
+          <p class="stats-empty">No reviewed sites yet.</p>
+        {{/if}}
+      </section>
+
+      {{! Top-rated sites }}
+      <section class="stats-section card">
+        <h2 class="card-title">Top Rated Sites</h2>
+        {{#if hasTopRated}}
+          <ol class="stats-ranked-list">
+            {{#each topRated}}
+            <li class="stats-ranked-item">
+              <a href="/sites/{{_id}}" class="stats-ranked-item__link">
+                <span class="stats-ranked-item__name">{{schoolName}}</span>
+                <span class="stats-ranked-item__meta">{{buildingAddress}}, {{borough}}</span>
+              </a>
+              <span class="stats-ranked-item__badge stats-ranked-item__badge--gold">{{overallRating}}/5</span>
+            </li>
+            {{/each}}
+          </ol>
+        {{else}}
+          <p class="stats-empty">No rated sites yet.</p>
+        {{/if}}
+      </section>
+
+    </div>
+
+    {{! ── Right column ── }}
+    <div class="stats-col">
+
+      {{! By borough }}
+      <section class="stats-section card">
+        <h2 class="card-title">Reviews by Borough</h2>
+        {{#if hasBorough}}
+          <table class="stats-table">
+            <thead>
+              <tr>
+                <th>Borough</th>
+                <th>Reviews</th>
+                <th>Noise</th>
+                <th>Air</th>
+                <th>Size</th>
+                <th>Hours</th>
+              </tr>
+            </thead>
+            <tbody>
+              {{#each byBorough}}
+              <tr>
+                <td class="stats-table__borough">{{borough}}</td>
+                <td class="stats-table__count">{{reviewCount}}</td>
+                <td>{{avgNoise}}</td>
+                <td>{{avgAirQuality}}</td>
+                <td>{{avgConstructionSize}}</td>
+                <td>{{avgWorkHours}}</td>
+              </tr>
+              {{/each}}
+            </tbody>
+          </table>
+        {{else}}
+          <p class="stats-empty">No borough data yet.</p>
+        {{/if}}
+      </section>
+
+      {{! Recent reviews }}
+      <section class="stats-section card">
+        <h2 class="card-title">Recent Reviews</h2>
+        {{#if hasRecentReviews}}
+          <ul class="stats-recent-list">
+            {{#each recentReviews}}
+            <li class="stats-recent-item">
+              <div class="stats-recent-item__header">
+                <a href="/sites/{{siteId}}" class="stats-recent-item__title">{{title}}</a>
+                <span class="stats-recent-item__date">{{formatDate createdAt}}</span>
+              </div>
+              <p class="stats-recent-item__meta">
+                By <strong>{{username}}</strong> at {{schoolName}}{{#if borough}}, {{borough}}{{/if}}
+              </p>
+            </li>
+            {{/each}}
+          </ul>
+        {{else}}
+          <p class="stats-empty">No reviews yet.</p>
+        {{/if}}
+      </section>
+
+    </div>
+  </div>
+
+</div>
