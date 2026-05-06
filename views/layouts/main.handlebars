@@ -23,9 +23,10 @@
       <ul id="search-dropdown" class="search-dropdown" role="listbox" hidden></ul>
     </div>
     <div class="nav-links">
+      <a href="/stats" class="nav-link">Statistics</a>
       <a href="{{#if isLoggedIn}}/reviews/new{{else}}/{{/if}}" class="btn btn--hazard">Submit a Review</a>
       {{#if isLoggedIn}}
-        <span class="nav-user">{{sessionUser.firstName}} {{sessionUser.lastName}}</span>
+        <a href="/profile" class="nav-link">{{sessionUser.firstName}} {{sessionUser.lastName}}</a>
         <a href="/signout" class="nav-link">Sign Out</a>
       {{else}}
         <a href="/signin" class="nav-link">Sign In</a>
