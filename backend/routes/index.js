@@ -10,10 +10,10 @@ import devRoutes from './dev_routes.js'; // TODO: remove before production
 const constructorMethod = (app) => {
   app.use('/', devRoutes);
   app.use('/', authRoutes);
+  app.use('/', reviewRoutes);
   app.use('/api', searchRoutes);
   app.use('/', statsRoutes);
   app.use('/', profileRoutes);
-  app.use('/', reviewRoutes);
   app.use('/admin', adminRoutes);
   app.use('/my-activity', activityRoutes);
 

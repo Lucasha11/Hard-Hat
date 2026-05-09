@@ -812,3 +812,31 @@ img { max-width: 100%; }
   border-radius: 8px;
   padding: 2rem;
 }
+
+/* ── Like button ─────────────────────────────────────────────────────────── */
+.like-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.35rem 0.75rem;
+  border: 1.5px solid var(--color-border, #d1d5db);
+  border-radius: 9999px;
+  background: transparent;
+  color: var(--color-text-muted, #6b7280);
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
+  line-height: 1;
+}
+.like-btn:hover:not(:disabled) {
+  background: #fff0f0;
+  border-color: #f87171;
+  color: #dc2626;
+}
+.like-btn--active {
+  background: #fff0f0;
+  border-color: #dc2626;
+  color: #dc2626;
+  font-weight: 600;
+}
+.like-btn:disabled { opacity: 0.5; cursor: default; }
