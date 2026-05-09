@@ -1,0 +1,69 @@
+<section class="page-section">
+  <header class="page-header">
+    <h1 class="page-title">Verified Sites</h1>
+    <p class="page-subtitle">
+      View construction sites that have been verified in the system.
+    </p>
+  </header>
+
+  <div class="summary-grid">
+    <div class="summary-card">
+      <h2>{{verifiedSiteCount}}</h2>
+      <p>Verified Sites</p>
+    </div>
+  </div>
+
+  <section class="activity-section">
+    <h2 class="section-title">All Verified Construction Sites</h2>
+
+    {{#if hasVerifiedSites}}
+      <div class="card-list">
+        {{#each verifiedSites}}
+          <article class="content-card content-card--verified">
+            <h3>
+              {{#if this.buildingAddress}}
+                {{this.buildingAddress}}
+              {{else}}
+                Construction Site
+              {{/if}}
+            </h3>
+
+            <p>
+              {{#if this.schoolName}}
+                {{this.schoolName}}
+              {{else}}
+                No school name listed.
+              {{/if}}
+            </p>
+
+            <dl class="details-list">
+              <dt>Site ID</dt>
+              <dd>{{this._id}}</dd>
+
+              <dt>Status</dt>
+              <dd>Verified</dd>
+
+              <dt>Borough</dt>
+              <dd>{{#if this.borough}}{{this.borough}}{{else}}Not listed{{/if}}</dd>
+
+              <dt>Project Type</dt>
+              <dd>{{#if this.projectType}}{{this.projectType}}{{else}}Not listed{{/if}}</dd>
+
+              <dt>Reviews</dt>
+              <dd>{{this.reviewCount}}</dd>
+
+              <dt>Description</dt>
+              <dd>{{#if this.projectDescription}}{{this.projectDescription}}{{else}}No description available{{/if}}</dd>
+            </dl>
+
+            <div class="button-row">
+              <a href="/sites/{{this._id}}" class="btn btn--secondary">View Site</a>
+            </div>
+          </article>
+        {{/each}}
+      </div>
+    {{else}}
+      <p class="empty-message">There are no verified construction sites yet.</p>
+    {{/if}}
+  </section>
+</section>
