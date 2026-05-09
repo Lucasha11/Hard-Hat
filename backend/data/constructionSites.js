@@ -213,7 +213,7 @@ const exportedMethods = {
     }));
   },
 
-  // Recomputes averageRatings and reviewCount from the live reviews collection.
+    // Recomputes averageRatings and reviewCount from the live reviews collection.
   async updateSiteStats(siteId) {
     siteId = validation.validateSiteId(siteId);
 
@@ -239,7 +239,51 @@ const exportedMethods = {
       { _id: siteId },
       { $set: { averageRatings: avgRatings, reviewCount: count } }
     );
+  },
+
+
+  // Admin feature: get sites waiting for approval
+  async getPendingSites() {
+    const sitesCollection = await constructionSites();
+    return await sitesCollection.find({ isApproved: false }).toArray();
+  },
+
+  // Get all verified/approved construction sites
+  async getApprovedSites() {
+    const sitesCollection = await constructionSites();
+    return await sitesCollection.find({ isApproved: true }).toArray();
+  },
+
+  // Admin feature: approve a construction site
+  async approveSite(siteId) {
+    siteId = validation.validateSiteId(siteId);
+
+    const sitesCollection = await constructionSites();
+    const updatedSite = await sitesCollection.findOneAndUpdate(
+      { _id: siteId },
+      { $set: { isApproved: true } },
+      { returnDocument: 'after' }
+    );
+
+    if (!updatedSite) throw `Error: Could not approve construction site with id '${siteId}'`;
+    return updatedSite;
+  },
+
+  // Admin feature: mark a construction site as pending
+  async markSitePending(siteId) {
+    siteId = validation.validateSiteId(siteId);
+
+    const sitesCollection = await constructionSites();
+    const updatedSite = await sitesCollection.findOneAndUpdate(
+      { _id: siteId },
+      { $set: { isApproved: false } },
+      { returnDocument: 'after' }
+    );
+
+    if (!updatedSite) throw `Error: Could not mark construction site with id '${siteId}' as pending`;
+    return updatedSite;
   }
 };
 
 export default exportedMethods;
+  

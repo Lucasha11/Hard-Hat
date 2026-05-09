@@ -66,8 +66,14 @@
         </div>
         <p class="review-body">${escapeHtml(review.body)}</p>
         ${photosHtml}
-        <div class="review-footer">
-          <span class="like-count">&#9829; ${review.likeCount}</span>
+       <div class="review-footer">
+          <button class="like-btn${review.likedByUser ? ' like-btn--active' : ''}"
+                  data-review-id="${review._id}"
+                  aria-label="Like this review"
+                  aria-pressed="${review.likedByUser ? 'true' : 'false'}"
+                  ${currentUserId ? '' : 'disabled'}>
+            ♥ <span class="like-count-val">${review.likeCount}</span>
+          </button>
           ${actionsHtml}
         </div>
       </div>`;
@@ -104,6 +110,7 @@
     } else {
       listEl.innerHTML = reviews.map(buildReviewCard).join('');
       attachDeleteHandlers();
+      attachLikeHandlers();
     }
   }
 
@@ -200,6 +207,38 @@
       fresh.addEventListener('submit', handleDelete);
     });
   }
+  
+  async function handleLike(e) {
+  const btn = e.currentTarget;
+  if (btn.disabled) return;
+  const reviewId = btn.dataset.reviewId;
+  btn.disabled = true;
+  try {
+    const res = await fetch(`/api/reviews/${encodeURIComponent(reviewId)}/like`, {
+      method: 'POST',
+      headers: { 'X-Requested-With': 'XMLHttpRequest' }
+    });
+    if (res.status === 401) { window.location.href = '/signin'; return; }
+    if (!res.ok) throw new Error(`Server error ${res.status}`);
+    const { liked, likeCount } = await res.json();
+    const countEl = btn.querySelector('.like-count-val');
+    if (countEl) countEl.textContent = likeCount;
+    btn.classList.toggle('like-btn--active', liked);
+    btn.setAttribute('aria-pressed', String(liked));
+  } catch (err) {
+    console.error('Like failed:', err);
+  } finally {
+    btn.disabled = false;
+  }
+}
+
+function attachLikeHandlers() {
+  document.querySelectorAll('.like-btn').forEach((btn) => {
+    if (btn.disabled) return;
+    btn.removeEventListener('click', handleLike);
+    btn.addEventListener('click', handleLike);
+  });
+}
 
   // ── Init ───────────────────────────────────────────────────────────────────
 
@@ -207,4 +246,5 @@
   if (sortSelect) sortSelect.addEventListener('change', handleSortChange);
 
   attachDeleteHandlers();
+  attachLikeHandlers();
 })();

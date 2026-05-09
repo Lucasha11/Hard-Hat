@@ -52,9 +52,13 @@
         </form>
 
         {{#if isLoggedIn}}
-          <a href="/reviews/new?siteId={{site._id}}" class="btn btn--primary">Write a Review</a>
+        <a href="/reviews/new?siteId={{site._id}}" class="btn btn--primary">Write a Review</a>
+        
+        <a href="/reports/update?siteId={{site._id}}" class="btn btn--secondary">
+          Submit Site Update
+        </a>
         {{else}}
-          <a href="/signin" class="btn btn--secondary">Sign in to review</a>
+        <a href="/signin" class="btn btn--secondary">Sign in to review</a>
         {{/if}}
       </div>
     </div>
@@ -85,9 +89,13 @@
             {{/each}}
           </div>
           {{/if}}
-
+                    
           <div class="review-footer">
-            <span class="like-count">&#9829; {{likeCount}}</span>
+            <button class="like-btn{{#if likedByUser}} like-btn--active{{/if}}" data-review-id="{{_id}}"
+              aria-label="Like this review" aria-pressed="{{#if likedByUser}}true{{else}}false{{/if}}" {{#unless
+              ../isLoggedIn}}title="Sign in to like reviews" disabled{{/unless}}>
+              ♥ <span class="like-count-val">{{likeCount}}</span>
+            </button>
             {{#if isOwner}}
             <div class="review-actions">
               <a href="/reviews/{{_id}}/edit" class="btn btn--small btn--secondary">Edit</a>
