@@ -52,9 +52,13 @@
         </form>
 
         {{#if isLoggedIn}}
-          <a href="/reviews/new?siteId={{site._id}}" class="btn btn--primary">Write a Review</a>
+        <a href="/reviews/new?siteId={{site._id}}" class="btn btn--primary">Write a Review</a>
+        
+        <a href="/reports/update?siteId={{site._id}}" class="btn btn--secondary">
+          Submit Site Update
+        </a>
         {{else}}
-          <a href="/signin" class="btn btn--secondary">Sign in to review</a>
+        <a href="/signin" class="btn btn--secondary">Sign in to review</a>
         {{/if}}
       </div>
     </div>

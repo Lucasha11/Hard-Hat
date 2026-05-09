@@ -1,0 +1,37 @@
+<div class="form-page">
+  <h1 class="page-title">Edit Report</h1>
+
+  {{#if error}}
+    <div class="alert alert--error">{{error}}</div>
+  {{/if}}
+
+  <form method="POST" action="/reports/{{report._id}}/edit" class="form card">
+    <div class="form-group">
+      <label class="form-label">Site ID</label>
+      <p class="form-static">{{report.siteId}}</p>
+    </div>
+
+    <div class="form-group">
+      <label for="description" class="form-label">Description</label>
+      <textarea
+        id="description"
+        name="description"
+        class="form-input form-textarea"
+        rows="5"
+        maxlength="1000"
+        required
+      >{{report.description}}</textarea>
+    </div>
+
+    <div class="form-actions">
+      <button type="submit" class="btn btn--primary">Save Changes</button>
+      <a href="/my-activity" class="btn btn--secondary">Cancel</a>
+    </div>
+  </form>
+
+  <form method="POST" action="/reports/{{report._id}}/delete" class="delete-report-form" style="margin-top: 1rem;">
+    <button type="submit" class="btn btn--danger" onclick="return confirm('Delete this report?')">
+      Delete Report
+    </button>
+  </form>
+</div>

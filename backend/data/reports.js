@@ -16,6 +16,84 @@ const checkStatus = (status) => {
 };
 
 const exportedMethods = {
+  async createUserReport(userId, siteId, description) {
+    userId = validation.checkId(userId);
+
+    if (!siteId || typeof siteId !== 'string' || siteId.trim().length === 0) {
+      throw 'Error: siteId is required';
+    }
+    siteId = siteId.trim();
+
+    if (!description || typeof description !== 'string' || description.trim().length === 0) {
+      throw 'Error: description is required';
+    }
+    description = description.trim();
+    if (description.length > 1000) throw 'Error: description cannot exceed 1000 characters';
+
+    const newReport = {
+      type: 'new_site',
+      siteId,
+      description,
+      submittedBy: new ObjectId(userId),
+      status: 'pending',
+      createdAt: new Date(),
+      updatedAt: new Date()
+    };
+
+    const reportCollection = await reports();
+    const result = await reportCollection.insertOne(newReport);
+    if (!result.insertedId) throw 'Error: Failed to create report';
+
+    const reportId = result.insertedId.toString();
+
+    const userCollection = await users();
+    await userCollection.updateOne(
+      {_id: new ObjectId(userId)},
+      {$push: {reportIds: reportId}}
+    );
+
+    return {...newReport, _id: result.insertedId};
+  },
+
+  async createSiteUpdateReport(userId, siteId, description) {
+    userId = validation.checkId(userId);
+
+    if (!siteId || typeof siteId !== 'string' || siteId.trim().length === 0) {
+      throw 'Error: siteId is required';
+    }
+    siteId = siteId.trim();
+
+    if (!description || typeof description !== 'string' || description.trim().length === 0) {
+      throw 'Error: description is required';
+    }
+    description = description.trim();
+    if (description.length > 1000) throw 'Error: description cannot exceed 1000 characters';
+
+    const newReport = {
+      type: 'site_update',
+      siteId,
+      description,
+      submittedBy: new ObjectId(userId),
+      status: 'pending',
+      createdAt: new Date(),
+      updatedAt: new Date()
+    };
+
+    const reportCollection = await reports();
+    const result = await reportCollection.insertOne(newReport);
+    if (!result.insertedId) throw 'Error: Failed to create site update report';
+
+    const reportId = result.insertedId.toString();
+
+    const userCollection = await users();
+    await userCollection.updateOne(
+      {_id: new ObjectId(userId)},
+      {$push: {reportIds: reportId}}
+    );
+
+    return {...newReport, _id: result.insertedId};
+  },
+
   async getReportById(reportId) {
     reportId = validation.checkId(reportId)
     const reportCollection = await reports();
