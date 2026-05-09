@@ -4,6 +4,7 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import reviewData from '../data/reviews.js';
 import siteData from '../data/constructionSites.js';
+import likesData from '../data/reviewLikes.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -276,11 +277,19 @@ router.route('/sites/:siteId').get(async (req, res) => {
     const allReviews = await reviewData.getReviewsBySiteId(siteId, sortBy);
 
     const userId = req.session.user?._id;
+
+    const reviewIds = allReviews.map((r) => r._id.toString());
+    const reviewsLikedByUser = userId
+      ? await likesData.getLikedReviewIds(userId, reviewIds)
+      : new Set();
+
     const reviewList = allReviews.map((r) => ({
       ...r,
       _id: r._id.toString(),
       userId: r.userId.toString(),
-      isOwner: !!(userId && r.userId.toString() === userId)
+      isOwner: !!(userId && r.userId.toString() === userId),
+      likedByUser: reviewsLikedByUser.has(r._id.toString()),
+      likeCount: r.likeCount || 0
     }));
 
     return res.render('sites/siteDetail', {
@@ -307,6 +316,11 @@ router.route('/api/sites/:siteId/reviews').get(async (req, res) => {
     const allReviews = await reviewData.getReviewsBySiteId(siteId, sortBy);
     const userId = req.session.user?._id;
 
+    const reviewIds = allReviews.map((r) => r._id.toString());
+    const likedByUserSet = userId
+      ? await likesData.getLikedReviewIds(userId, reviewIds)
+      : new Set();
+
     const reviews = allReviews.map((r) => ({
       _id: r._id.toString(),
       siteId: r.siteId,
@@ -316,12 +330,26 @@ router.route('/api/sites/:siteId/reviews').get(async (req, res) => {
       title: r.title,
       body: r.body,
       photoUrls: r.photoUrls || [],
-      likeCount: r.likeCount,
+      likeCount: r.likeCount || 0,
       createdAt: r.createdAt,
-      isOwner: !!(userId && r.userId.toString() === userId)
+      isOwner: !!(userId && r.userId.toString() === userId),
+      likedByUser: likedByUserSet.has(r._id.toString())
     }));
 
     return res.json({ reviews });
+  } catch (e) {
+    return res.status(500).json({ error: typeof e === 'string' ? e : e.message });
+  }
+});
+
+router.route('/api/reviews/:reviewId/like').post(async (req, res) => {
+  if (!req.session.user)
+    return res.status(401).json({ error: 'You must be logged in to like reviews.' });
+  try {
+    const { reviewId } = req.params;
+    const loggedInUserId = req.session.user._id;
+    const result = await likesData.toggleLike(reviewId, loggedInUserId);
+    return res.json(result);
   } catch (e) {
     return res.status(500).json({ error: typeof e === 'string' ? e : e.message });
   }
