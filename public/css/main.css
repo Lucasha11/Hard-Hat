@@ -813,6 +813,10 @@ img { max-width: 100%; }
   padding: 2rem;
 }
 
+.content-card--verified {
+  border-left: 5px solid #f5c400;
+}
+
 /* ── Like button ─────────────────────────────────────────────────────────── */
 .like-btn {
   display: inline-flex;

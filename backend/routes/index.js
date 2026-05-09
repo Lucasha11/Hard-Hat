@@ -7,6 +7,7 @@ import adminRoutes from './admin.js';
 import activityRoutes from './activity.js';
 import devRoutes from './dev_routes.js'; // TODO: remove before production
 import reportRoutes from './report_routes.js';
+import verifiedSitesRoutes from './verifiedSites.js';
 
 const constructorMethod = (app) => {
   app.use('/', devRoutes);
@@ -18,6 +19,7 @@ const constructorMethod = (app) => {
   app.use('/admin', adminRoutes);
   app.use('/my-activity', activityRoutes);
   app.use('/', reportRoutes);
+  app.use('/verified-sites', verifiedSitesRoutes);
 
   app.use('*path', (req, res) => {
     return res.status(404).render('error', {

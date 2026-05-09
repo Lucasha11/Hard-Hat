@@ -241,10 +241,17 @@ const exportedMethods = {
     );
   },
 
+
   // Admin feature: get sites waiting for approval
   async getPendingSites() {
     const sitesCollection = await constructionSites();
     return await sitesCollection.find({ isApproved: false }).toArray();
+  },
+
+  // Get all verified/approved construction sites
+  async getApprovedSites() {
+    const sitesCollection = await constructionSites();
+    return await sitesCollection.find({ isApproved: true }).toArray();
   },
 
   // Admin feature: approve a construction site
