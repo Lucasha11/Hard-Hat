@@ -14,5 +14,17 @@ router.get('/search', async (req, res) => {
     return res.status(500).json({ results: [], error: 'Search failed' });
   }
 });
-
+router.get('/filter', async (req, res) => {
+  try {
+    const filters = {
+    noise: req.query.noise,
+    airQuality: req.query.airQuality,
+    workHours: req.query.workHours
+    };
+    const results = await constructionSitesMethods.filterSites(filters);
+    return res.render('search/filter', { title: 'Filtered Sites', results});
+  } catch (e) {
+    return res.status(500).render('error', {error: e.toString()});
+  }
+});
 export default router;

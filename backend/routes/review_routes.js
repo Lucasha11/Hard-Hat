@@ -4,6 +4,7 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import reviewData from '../data/reviews.js';
 import siteData from '../data/constructionSites.js';
+import notificationData  from '../data/notifications.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -150,6 +151,7 @@ router.route('/reviews').post(requireLogin, upload.single('photo'), async (req, 
     const { _id: userId, username } = req.session.user;
 
     await reviewData.createReview(siteId, userId, username, ratings, title, body, photoUrls);
+    await notificationData.notifyWatchers(siteId,  `${username} added a new review to this construction site`, userId);
     return res.redirect(`/sites/${siteId}`);
   } catch (e) {
     const errMsg = typeof e === 'string' ? e : e.message;
@@ -326,5 +328,23 @@ router.route('/api/sites/:siteId/reviews').get(async (req, res) => {
     return res.status(500).json({ error: typeof e === 'string' ? e : e.message });
   }
 });
-
+router.post('/sites/:siteId/watch', requireLogin, async(req, res) => {
+  try {
+    const siteId = req.params.siteId;
+    const userId = req.session.user._id;
+    await siteData.addWatcher(siteId, userId);
+    return res.redirect(`/sites/${siteId}`);
+  } catch (e) {
+      return res.status(500).render( 'error', {error: e.toString()});
+  }
+});
+router.get('/notifications', requireLogin, async(req, res) => {
+  try {
+    const userId = req.session.user._id;
+    const notifications = await notificationData.getNotificationsByUserId(userId);
+    return res.render("notifications/index", {title: "Notifications", notifications});
+  } catch (e) {
+      return res.status(500).render( 'error', {error: e.toString()});
+  }
+});
 export default router;

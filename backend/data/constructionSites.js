@@ -1,3 +1,4 @@
+import { type } from 'os';
 import { constructionSites, reviews } from '../config/mongoCollections.js';
 import validation from './validation.js';
 
@@ -11,6 +12,9 @@ function toNumber(v) {
   const n = Number(v);
   return Number.isFinite(n) ? n : null;
 }
+
+//filter construction sites
+
 
 // Hits the city dataset for `buildingid=<siteId>`. Returns the first record, or throws.
 async function fetchFromCityDataset(siteId) {
@@ -52,6 +56,7 @@ function shapeFromCityRecord(rec) {
     likeCount: 0,
     source: 'NYC Open Data',
     isApproved: true,
+    watchers: [],
     createdAt: new Date()
   };
 }
@@ -239,7 +244,41 @@ const exportedMethods = {
       { _id: siteId },
       { $set: { averageRatings: avgRatings, reviewCount: count } }
     );
+  },
+  async filterSites(filters) {
+    const sitesCollection = await constructionSites();
+
+    const query = {};
+    if(filters.noise) {
+      query["averageRatings.noise"] = {
+        $gte: Number(filters.noise)
+      };
+    }
+    if(filters.airQuality) {
+      query["averageRatings.airQuality"] = {
+        $gte: Number(filters.airQuality)
+      };
+    }
+    if(filters.workHours) {
+      query["averageRatings.workHours"] = {
+        $gte: Number(filters.workHours)
+      };
+    }
+    return await sitesCollection.find(query).toArray();
+  },
+  async addWatcher(siteId, userId){
+    siteId = validation.validateSiteId(siteId);
+    if(!userId || typeof userId !== 'string') throw "Error: userId must be a string";
+
+    const sitesCollection = await constructionSites();
+    const updated = await sitesCollection.findOneAndUpdate(
+      {_id: siteId},
+      {$addToSet: {watchers: userId}},
+      {returnDocument: 'after'}
+    );
+    if(!updated) throw `Error: site with id ${siteId} not found`;
+    return updated;
   }
-};
+}
 
 export default exportedMethods;

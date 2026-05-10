@@ -8,6 +8,11 @@
       {{#if site.projectDescription}}
         <p class="site-description">{{site.projectDescription}}</p>
       {{/if}}
+      {{#if isLoggedIn}}
+        <form action="/sites/{{site._id}}/watch" method="post">
+          <button type="submit" class="btn btn--secondary">Watch Site Updates</button>
+        </form>
+      {{/if}}
     </div>
   </div>
 

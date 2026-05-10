@@ -1,0 +1,14 @@
+<h1>Your Notifications</h1>
+
+{{#if notifications.length}}
+    {{#each notifications}}
+        <div class="notification-card">
+            <p>{{this.message}}</p>
+            <a href="/sites/{{this.siteId}}">View Site</a>
+            <small>{{formatDate this.createdAt}}</small>
+
+        </div>
+    {{/each}}
+{{else}}
+<p>No notifications </p>
+{{/if}}
