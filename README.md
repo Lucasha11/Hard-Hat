@@ -1,7 +1,7 @@
 # Hard Hat
 NYC construction site review application — CS 546 Final Project
 
-Link to Github Repository: [https://github.com/Lucasha11/Hard-Hat/](Link)
+Link to Github Repository: https://github.com/Lucasha11/Hard-Hat/
 
 **Team:** Lucas Ha, Amy Arias Ramirez, Daniel Lenczewski, Joseph Shweky, Leighana Ruiz
 
