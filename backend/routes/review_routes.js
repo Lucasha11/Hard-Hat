@@ -5,10 +5,14 @@ import { fileURLToPath } from 'url';
 import reviewData from '../data/reviews.js';
 import siteData from '../data/constructionSites.js';
 <<<<<<< HEAD
+<<<<<<< HEAD
 import likesData from '../data/reviewLikes.js';
 =======
 import notificationData  from '../data/notifications.js';
 >>>>>>> features8and10
+=======
+import likesData from '../data/reviewLikes.js';
+>>>>>>> origin/main
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -156,9 +160,12 @@ router.route('/reviews').post(requireLogin, upload.single('photo'), async (req, 
 
     await reviewData.createReview(siteId, userId, username, ratings, title, body, photoUrls);
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
     await notificationData.notifyWatchers(siteId,  `${username} added a new review to this construction site`, userId);
 >>>>>>> features8and10
+=======
+>>>>>>> origin/main
     return res.redirect(`/sites/${siteId}`);
   } catch (e) {
     const errMsg = typeof e === 'string' ? e : e.message;
@@ -286,18 +293,25 @@ router.route('/sites/:siteId').get(async (req, res) => {
 
     const userId = req.session.user?._id;
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> origin/main
 
     const reviewIds = allReviews.map((r) => r._id.toString());
     const reviewsLikedByUser = userId
       ? await likesData.getLikedReviewIds(userId, reviewIds)
       : new Set();
 
+<<<<<<< HEAD
 =======
 >>>>>>> features8and10
+=======
+>>>>>>> origin/main
     const reviewList = allReviews.map((r) => ({
       ...r,
       _id: r._id.toString(),
       userId: r.userId.toString(),
+<<<<<<< HEAD
 <<<<<<< HEAD
       isOwner: !!(userId && r.userId.toString() === userId),
       likedByUser: reviewsLikedByUser.has(r._id.toString()),
@@ -305,6 +319,11 @@ router.route('/sites/:siteId').get(async (req, res) => {
 =======
       isOwner: !!(userId && r.userId.toString() === userId)
 >>>>>>> features8and10
+=======
+      isOwner: !!(userId && r.userId.toString() === userId),
+      likedByUser: reviewsLikedByUser.has(r._id.toString()),
+      likeCount: r.likeCount || 0
+>>>>>>> origin/main
     }));
 
     return res.render('sites/siteDetail', {
@@ -332,13 +351,19 @@ router.route('/api/sites/:siteId/reviews').get(async (req, res) => {
     const userId = req.session.user?._id;
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> origin/main
     const reviewIds = allReviews.map((r) => r._id.toString());
     const likedByUserSet = userId
       ? await likesData.getLikedReviewIds(userId, reviewIds)
       : new Set();
 
+<<<<<<< HEAD
 =======
 >>>>>>> features8and10
+=======
+>>>>>>> origin/main
     const reviews = allReviews.map((r) => ({
       _id: r._id.toString(),
       siteId: r.siteId,
@@ -349,15 +374,21 @@ router.route('/api/sites/:siteId/reviews').get(async (req, res) => {
       body: r.body,
       photoUrls: r.photoUrls || [],
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> origin/main
       likeCount: r.likeCount || 0,
       createdAt: r.createdAt,
       isOwner: !!(userId && r.userId.toString() === userId),
       likedByUser: likedByUserSet.has(r._id.toString())
+<<<<<<< HEAD
 =======
       likeCount: r.likeCount,
       createdAt: r.createdAt,
       isOwner: !!(userId && r.userId.toString() === userId)
 >>>>>>> features8and10
+=======
+>>>>>>> origin/main
     }));
 
     return res.json({ reviews });
@@ -366,6 +397,9 @@ router.route('/api/sites/:siteId/reviews').get(async (req, res) => {
   }
 });
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> origin/main
 
 router.route('/api/reviews/:reviewId/like').post(async (req, res) => {
   if (!req.session.user)
@@ -380,6 +414,7 @@ router.route('/api/reviews/:reviewId/like').post(async (req, res) => {
   }
 });
 
+<<<<<<< HEAD
 =======
 router.post('/sites/:siteId/watch', requireLogin, async(req, res) => {
   try {
@@ -401,4 +436,6 @@ router.get('/notifications', requireLogin, async(req, res) => {
   }
 });
 >>>>>>> features8and10
+=======
+>>>>>>> origin/main
 export default router;

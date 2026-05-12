@@ -1,7 +1,15 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 # Hard Hat
 NYC construction site review application — CS 546 Final Project
 
+=======
+# Hard Hat
+NYC construction site review application — CS 546 Final Project
+
+Link to Github Repository: https://github.com/Lucasha11/Hard-Hat/
+
+>>>>>>> origin/main
 **Team:** Lucas Ha, Amy Arias Ramirez, Daniel Lenczewski, Joseph Shweky, Leighana Ruiz
 
 ---
@@ -88,6 +96,7 @@ All accounts use the password: **`Testing123!`**
 ## Re-seeding
 
 Running `node seed.js` again drops and rebuilds all collections from scratch. Any data created during manual testing will be lost.
+<<<<<<< HEAD
 =======
 # CS-546WS-Final-Project
 Construction site review app
@@ -99,3 +108,5 @@ Construction site review app
 3. Run **node app.js** in terminal
 4. Navigate to _localhost:3000_ in browser
 >>>>>>> features8and10
+=======
+>>>>>>> origin/main

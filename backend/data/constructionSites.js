@@ -1,7 +1,10 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 import { type } from 'os';
 >>>>>>> features8and10
+=======
+>>>>>>> origin/main
 import { constructionSites, reviews } from '../config/mongoCollections.js';
 import validation from './validation.js';
 
@@ -17,11 +20,14 @@ function toNumber(v) {
 }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 //filter construction sites
 
 
 >>>>>>> features8and10
+=======
+>>>>>>> origin/main
 // Hits the city dataset for `buildingid=<siteId>`. Returns the first record, or throws.
 async function fetchFromCityDataset(siteId) {
   const url = `${NYC_DATASET_URL}?buildingid=${encodeURIComponent(siteId)}`;
@@ -63,9 +69,12 @@ function shapeFromCityRecord(rec) {
     source: 'NYC Open Data',
     isApproved: true,
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
     watchers: [],
 >>>>>>> features8and10
+=======
+>>>>>>> origin/main
     createdAt: new Date()
   };
 }
@@ -228,10 +237,14 @@ const exportedMethods = {
   },
 
 <<<<<<< HEAD
+<<<<<<< HEAD
     // Recomputes averageRatings and reviewCount from the live reviews collection.
 =======
   // Recomputes averageRatings and reviewCount from the live reviews collection.
 >>>>>>> features8and10
+=======
+    // Recomputes averageRatings and reviewCount from the live reviews collection.
+>>>>>>> origin/main
   async updateSiteStats(siteId) {
     siteId = validation.validateSiteId(siteId);
 
@@ -259,6 +272,9 @@ const exportedMethods = {
     );
   },
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> origin/main
 
 
   // Admin feature: get sites waiting for approval
@@ -305,6 +321,7 @@ const exportedMethods = {
 };
 
 export default exportedMethods;
+<<<<<<< HEAD
   
 =======
   async filterSites(filters) {
@@ -345,3 +362,6 @@ export default exportedMethods;
 
 export default exportedMethods;
 >>>>>>> features8and10
+=======
+  
+>>>>>>> origin/main

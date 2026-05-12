@@ -4,19 +4,28 @@ import searchRoutes from './search_routes.js';
 import statsRoutes from './stats_routes.js';
 import profileRoutes from './profile_routes.js';
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> origin/main
 import adminRoutes from './admin.js';
 import activityRoutes from './activity.js';
 import devRoutes from './dev_routes.js'; // TODO: remove before production
 import reportRoutes from './report_routes.js';
 import verifiedSitesRoutes from './verifiedSites.js';
+<<<<<<< HEAD
 =======
 import devRoutes from './dev_routes.js'; // TODO: remove before production
 >>>>>>> features8and10
+=======
+>>>>>>> origin/main
 
 const constructorMethod = (app) => {
   app.use('/', devRoutes);
   app.use('/', authRoutes);
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> origin/main
   app.use('/', reviewRoutes);
   app.use('/api', searchRoutes);
   app.use('/', statsRoutes);
@@ -25,12 +34,15 @@ const constructorMethod = (app) => {
   app.use('/my-activity', activityRoutes);
   app.use('/', reportRoutes);
   app.use('/verified-sites', verifiedSitesRoutes);
+<<<<<<< HEAD
 =======
   app.use('/api', searchRoutes);
   app.use('/', statsRoutes);
   app.use('/', profileRoutes);
   app.use('/', reviewRoutes);
 >>>>>>> features8and10
+=======
+>>>>>>> origin/main
 
   app.use('*path', (req, res) => {
     return res.status(404).render('error', {

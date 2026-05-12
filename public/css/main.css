@@ -53,6 +53,9 @@ img { max-width: 100%; }
 
 .nav-user { color: #fff; font-size: 0.9rem; font-weight: 500; }
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> origin/main
 .nav-user-menu {
   position: relative;
   display: inline-flex;
@@ -113,8 +116,11 @@ img { max-width: 100%; }
   background: #f5f5f0;
   text-decoration: none;
 }
+<<<<<<< HEAD
 =======
 >>>>>>> features8and10
+=======
+>>>>>>> origin/main
 
 /* ── Layout ────────────────────────────────────────────────────────────────── */
 .main-content {
@@ -716,6 +722,9 @@ img { max-width: 100%; }
 .form-optional { font-size: 0.8rem; color: #888; font-weight: 400; }
 .form-note { font-size: 0.82rem; color: #888; margin: 0.5rem 0 1rem; }
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> origin/main
 
 /* ── Admin & My Activity Pages ─────────────────────────────────────────────── */
 .page-section {
@@ -847,6 +856,10 @@ img { max-width: 100%; }
   color: #dc2626;
   font-weight: 600;
 }
+<<<<<<< HEAD
 .like-btn:disabled { opacity: 0.5; cursor: default; }
 =======
 >>>>>>> features8and10
+=======
+.like-btn:disabled { opacity: 0.5; cursor: default; }
+>>>>>>> origin/main
