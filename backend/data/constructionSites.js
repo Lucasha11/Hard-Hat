@@ -1,3 +1,7 @@
+<<<<<<< HEAD
+=======
+import { type } from 'os';
+>>>>>>> features8and10
 import { constructionSites, reviews } from '../config/mongoCollections.js';
 import validation from './validation.js';
 
@@ -12,6 +16,12 @@ function toNumber(v) {
   return Number.isFinite(n) ? n : null;
 }
 
+<<<<<<< HEAD
+=======
+//filter construction sites
+
+
+>>>>>>> features8and10
 // Hits the city dataset for `buildingid=<siteId>`. Returns the first record, or throws.
 async function fetchFromCityDataset(siteId) {
   const url = `${NYC_DATASET_URL}?buildingid=${encodeURIComponent(siteId)}`;
@@ -52,6 +62,10 @@ function shapeFromCityRecord(rec) {
     likeCount: 0,
     source: 'NYC Open Data',
     isApproved: true,
+<<<<<<< HEAD
+=======
+    watchers: [],
+>>>>>>> features8and10
     createdAt: new Date()
   };
 }
@@ -213,7 +227,11 @@ const exportedMethods = {
     }));
   },
 
+<<<<<<< HEAD
     // Recomputes averageRatings and reviewCount from the live reviews collection.
+=======
+  // Recomputes averageRatings and reviewCount from the live reviews collection.
+>>>>>>> features8and10
   async updateSiteStats(siteId) {
     siteId = validation.validateSiteId(siteId);
 
@@ -240,6 +258,7 @@ const exportedMethods = {
       { $set: { averageRatings: avgRatings, reviewCount: count } }
     );
   },
+<<<<<<< HEAD
 
 
   // Admin feature: get sites waiting for approval
@@ -287,3 +306,42 @@ const exportedMethods = {
 
 export default exportedMethods;
   
+=======
+  async filterSites(filters) {
+    const sitesCollection = await constructionSites();
+
+    const query = {};
+    if(filters.noise) {
+      query["averageRatings.noise"] = {
+        $gte: Number(filters.noise)
+      };
+    }
+    if(filters.airQuality) {
+      query["averageRatings.airQuality"] = {
+        $gte: Number(filters.airQuality)
+      };
+    }
+    if(filters.workHours) {
+      query["averageRatings.workHours"] = {
+        $gte: Number(filters.workHours)
+      };
+    }
+    return await sitesCollection.find(query).toArray();
+  },
+  async addWatcher(siteId, userId){
+    siteId = validation.validateSiteId(siteId);
+    if(!userId || typeof userId !== 'string') throw "Error: userId must be a string";
+
+    const sitesCollection = await constructionSites();
+    const updated = await sitesCollection.findOneAndUpdate(
+      {_id: siteId},
+      {$addToSet: {watchers: userId}},
+      {returnDocument: 'after'}
+    );
+    if(!updated) throw `Error: site with id ${siteId} not found`;
+    return updated;
+  }
+}
+
+export default exportedMethods;
+>>>>>>> features8and10

@@ -19,7 +19,15 @@ const getCollectionFn = (collection) => {
 export const ratings = getCollectionFn('ratings');
 export const geoPoint = getCollectionFn('geoPoint');
 export const users = getCollectionFn('users');
+<<<<<<< HEAD
 export const constructionSites = getCollectionFn('ConstructionSites')
 export const reviews = getCollectionFn('reviews')
 export const reports = getCollectionFn('reports')
 export const reviewLikes = getCollectionFn('ReviewLikes')
+=======
+export const constructionSites = getCollectionFn('ConstructionSites');
+export const reviews = getCollectionFn('reviews');
+export const reports = getCollectionFn('reports');
+export const reviewLikes = getCollectionFn('ReviewLikes');
+export const notifications = getCollectionFn('notifications');
+>>>>>>> features8and10

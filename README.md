@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Hard Hat
 NYC construction site review application — CS 546 Final Project
 
@@ -87,3 +88,14 @@ All accounts use the password: **`Testing123!`**
 ## Re-seeding
 
 Running `node seed.js` again drops and rebuilds all collections from scratch. Any data created during manual testing will be lost.
+=======
+# CS-546WS-Final-Project
+Construction site review app
+
+
+# To Run the Application
+1. Run **npm install** in terminal
+2. Run **mongod** in terminal to start mongodb database
+3. Run **node app.js** in terminal
+4. Navigate to _localhost:3000_ in browser
+>>>>>>> features8and10

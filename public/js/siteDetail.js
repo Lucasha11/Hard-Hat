@@ -66,6 +66,7 @@
         </div>
         <p class="review-body">${escapeHtml(review.body)}</p>
         ${photosHtml}
+<<<<<<< HEAD
        <div class="review-footer">
           <button class="like-btn${review.likedByUser ? ' like-btn--active' : ''}"
                   data-review-id="${review._id}"
@@ -74,6 +75,10 @@
                   ${currentUserId ? '' : 'disabled'}>
             ♥ <span class="like-count-val">${review.likeCount}</span>
           </button>
+=======
+        <div class="review-footer">
+          <span class="like-count">&#9829; ${review.likeCount}</span>
+>>>>>>> features8and10
           ${actionsHtml}
         </div>
       </div>`;
@@ -110,7 +115,10 @@
     } else {
       listEl.innerHTML = reviews.map(buildReviewCard).join('');
       attachDeleteHandlers();
+<<<<<<< HEAD
       attachLikeHandlers();
+=======
+>>>>>>> features8and10
     }
   }
 
@@ -207,6 +215,7 @@
       fresh.addEventListener('submit', handleDelete);
     });
   }
+<<<<<<< HEAD
   
   async function handleLike(e) {
   const btn = e.currentTarget;
@@ -239,6 +248,8 @@ function attachLikeHandlers() {
     btn.addEventListener('click', handleLike);
   });
 }
+=======
+>>>>>>> features8and10
 
   // ── Init ───────────────────────────────────────────────────────────────────
 
@@ -246,5 +257,8 @@ function attachLikeHandlers() {
   if (sortSelect) sortSelect.addEventListener('change', handleSortChange);
 
   attachDeleteHandlers();
+<<<<<<< HEAD
   attachLikeHandlers();
+=======
+>>>>>>> features8and10
 })();

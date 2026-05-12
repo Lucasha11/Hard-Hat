@@ -4,7 +4,11 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import reviewData from '../data/reviews.js';
 import siteData from '../data/constructionSites.js';
+<<<<<<< HEAD
 import likesData from '../data/reviewLikes.js';
+=======
+import notificationData  from '../data/notifications.js';
+>>>>>>> features8and10
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -151,6 +155,10 @@ router.route('/reviews').post(requireLogin, upload.single('photo'), async (req, 
     const { _id: userId, username } = req.session.user;
 
     await reviewData.createReview(siteId, userId, username, ratings, title, body, photoUrls);
+<<<<<<< HEAD
+=======
+    await notificationData.notifyWatchers(siteId,  `${username} added a new review to this construction site`, userId);
+>>>>>>> features8and10
     return res.redirect(`/sites/${siteId}`);
   } catch (e) {
     const errMsg = typeof e === 'string' ? e : e.message;
@@ -277,19 +285,26 @@ router.route('/sites/:siteId').get(async (req, res) => {
     const allReviews = await reviewData.getReviewsBySiteId(siteId, sortBy);
 
     const userId = req.session.user?._id;
+<<<<<<< HEAD
 
     const reviewIds = allReviews.map((r) => r._id.toString());
     const reviewsLikedByUser = userId
       ? await likesData.getLikedReviewIds(userId, reviewIds)
       : new Set();
 
+=======
+>>>>>>> features8and10
     const reviewList = allReviews.map((r) => ({
       ...r,
       _id: r._id.toString(),
       userId: r.userId.toString(),
+<<<<<<< HEAD
       isOwner: !!(userId && r.userId.toString() === userId),
       likedByUser: reviewsLikedByUser.has(r._id.toString()),
       likeCount: r.likeCount || 0
+=======
+      isOwner: !!(userId && r.userId.toString() === userId)
+>>>>>>> features8and10
     }));
 
     return res.render('sites/siteDetail', {
@@ -316,11 +331,14 @@ router.route('/api/sites/:siteId/reviews').get(async (req, res) => {
     const allReviews = await reviewData.getReviewsBySiteId(siteId, sortBy);
     const userId = req.session.user?._id;
 
+<<<<<<< HEAD
     const reviewIds = allReviews.map((r) => r._id.toString());
     const likedByUserSet = userId
       ? await likesData.getLikedReviewIds(userId, reviewIds)
       : new Set();
 
+=======
+>>>>>>> features8and10
     const reviews = allReviews.map((r) => ({
       _id: r._id.toString(),
       siteId: r.siteId,
@@ -330,10 +348,16 @@ router.route('/api/sites/:siteId/reviews').get(async (req, res) => {
       title: r.title,
       body: r.body,
       photoUrls: r.photoUrls || [],
+<<<<<<< HEAD
       likeCount: r.likeCount || 0,
       createdAt: r.createdAt,
       isOwner: !!(userId && r.userId.toString() === userId),
       likedByUser: likedByUserSet.has(r._id.toString())
+=======
+      likeCount: r.likeCount,
+      createdAt: r.createdAt,
+      isOwner: !!(userId && r.userId.toString() === userId)
+>>>>>>> features8and10
     }));
 
     return res.json({ reviews });
@@ -341,6 +365,7 @@ router.route('/api/sites/:siteId/reviews').get(async (req, res) => {
     return res.status(500).json({ error: typeof e === 'string' ? e : e.message });
   }
 });
+<<<<<<< HEAD
 
 router.route('/api/reviews/:reviewId/like').post(async (req, res) => {
   if (!req.session.user)
@@ -355,4 +380,25 @@ router.route('/api/reviews/:reviewId/like').post(async (req, res) => {
   }
 });
 
+=======
+router.post('/sites/:siteId/watch', requireLogin, async(req, res) => {
+  try {
+    const siteId = req.params.siteId;
+    const userId = req.session.user._id;
+    await siteData.addWatcher(siteId, userId);
+    return res.redirect(`/sites/${siteId}`);
+  } catch (e) {
+      return res.status(500).render( 'error', {error: e.toString()});
+  }
+});
+router.get('/notifications', requireLogin, async(req, res) => {
+  try {
+    const userId = req.session.user._id;
+    const notifications = await notificationData.getNotificationsByUserId(userId);
+    return res.render("notifications/index", {title: "Notifications", notifications});
+  } catch (e) {
+      return res.status(500).render( 'error', {error: e.toString()});
+  }
+});
+>>>>>>> features8and10
 export default router;

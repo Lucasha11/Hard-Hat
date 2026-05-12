@@ -1,0 +1,30 @@
+<form action="/api/filter" method="get">
+    <label>Minimum Noise Rating</label>
+    <select name="noise">
+        <option value="">Any</option>
+        <option value="1">1+</option>
+        <option value="2">2+</option>
+        <option value="3">3+</option>
+        <option value="4">4+</option>
+        <option value="5">5</option>
+    </select>
+    <label>Minimum Air Quality Rating</label>
+    <select name="airQuality">
+        <option value="">Any</option>
+        <option value="1">1+</option>
+        <option value="2">2+</option>
+        <option value="3">3+</option>
+        <option value="4">4+</option>
+        <option value="5">5</option>
+    </select>
+    <label>Minimum Work Hours Rating</label>
+    <select name="workHours">
+        <option value="">Any</option>
+        <option value="1">1+</option>
+        <option value="2">2+</option>
+        <option value="3">3+</option>
+        <option value="4">4+</option>
+        <option value="5">5</option>
+    </select>
+    <button type="submit">Filter</button>
+</form>

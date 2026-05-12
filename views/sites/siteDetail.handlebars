@@ -8,6 +8,14 @@
       {{#if site.projectDescription}}
         <p class="site-description">{{site.projectDescription}}</p>
       {{/if}}
+<<<<<<< HEAD
+=======
+      {{#if isLoggedIn}}
+        <form action="/sites/{{site._id}}/watch" method="post">
+          <button type="submit" class="btn btn--secondary">Watch Site Updates</button>
+        </form>
+      {{/if}}
+>>>>>>> features8and10
     </div>
   </div>
 
@@ -52,6 +60,7 @@
         </form>
 
         {{#if isLoggedIn}}
+<<<<<<< HEAD
         <a href="/reviews/new?siteId={{site._id}}" class="btn btn--primary">Write a Review</a>
         
         <a href="/reports/update?siteId={{site._id}}" class="btn btn--secondary">
@@ -59,6 +68,11 @@
         </a>
         {{else}}
         <a href="/signin" class="btn btn--secondary">Sign in to review</a>
+=======
+          <a href="/reviews/new?siteId={{site._id}}" class="btn btn--primary">Write a Review</a>
+        {{else}}
+          <a href="/signin" class="btn btn--secondary">Sign in to review</a>
+>>>>>>> features8and10
         {{/if}}
       </div>
     </div>
@@ -89,6 +103,7 @@
             {{/each}}
           </div>
           {{/if}}
+<<<<<<< HEAD
                     
           <div class="review-footer">
             <button class="like-btn{{#if likedByUser}} like-btn--active{{/if}}" data-review-id="{{_id}}"
@@ -96,6 +111,11 @@
               ../isLoggedIn}}title="Sign in to like reviews" disabled{{/unless}}>
               ♥ <span class="like-count-val">{{likeCount}}</span>
             </button>
+=======
+
+          <div class="review-footer">
+            <span class="like-count">&#9829; {{likeCount}}</span>
+>>>>>>> features8and10
             {{#if isOwner}}
             <div class="review-actions">
               <a href="/reviews/{{_id}}/edit" class="btn btn--small btn--secondary">Edit</a>
