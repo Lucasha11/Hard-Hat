@@ -1,10 +1,3 @@
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-import { type } from 'os';
->>>>>>> features8and10
-=======
->>>>>>> origin/main
 import { constructionSites, reviews } from '../config/mongoCollections.js';
 import validation from './validation.js';
 
@@ -19,15 +12,8 @@ function toNumber(v) {
   return Number.isFinite(n) ? n : null;
 }
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
 //filter construction sites
 
-
->>>>>>> features8and10
-=======
->>>>>>> origin/main
 // Hits the city dataset for `buildingid=<siteId>`. Returns the first record, or throws.
 async function fetchFromCityDataset(siteId) {
   const url = `${NYC_DATASET_URL}?buildingid=${encodeURIComponent(siteId)}`;
@@ -68,13 +54,7 @@ function shapeFromCityRecord(rec) {
     likeCount: 0,
     source: 'NYC Open Data',
     isApproved: true,
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
     watchers: [],
->>>>>>> features8and10
-=======
->>>>>>> origin/main
     createdAt: new Date()
   };
 }
@@ -235,16 +215,6 @@ const exportedMethods = {
       sublabel: s.borough || s.projectDescription || null
     }));
   },
-
-<<<<<<< HEAD
-<<<<<<< HEAD
-    // Recomputes averageRatings and reviewCount from the live reviews collection.
-=======
-  // Recomputes averageRatings and reviewCount from the live reviews collection.
->>>>>>> features8and10
-=======
-    // Recomputes averageRatings and reviewCount from the live reviews collection.
->>>>>>> origin/main
   async updateSiteStats(siteId) {
     siteId = validation.validateSiteId(siteId);
 
@@ -271,10 +241,6 @@ const exportedMethods = {
       { $set: { averageRatings: avgRatings, reviewCount: count } }
     );
   },
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> origin/main
 
 
   // Admin feature: get sites waiting for approval
@@ -317,13 +283,7 @@ const exportedMethods = {
 
     if (!updatedSite) throw `Error: Could not mark construction site with id '${siteId}' as pending`;
     return updatedSite;
-  }
-};
-
-export default exportedMethods;
-<<<<<<< HEAD
-  
-=======
+  },
   async filterSites(filters) {
     const sitesCollection = await constructionSites();
 
@@ -361,7 +321,3 @@ export default exportedMethods;
 }
 
 export default exportedMethods;
->>>>>>> features8and10
-=======
-  
->>>>>>> origin/main

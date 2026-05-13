@@ -2,11 +2,6 @@ import { Router } from 'express';
 import constructionSitesMethods from '../data/constructionSites.js';
 
 const router = Router();
-
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> origin/main
 const NYC_DATASET_URL = 'https://data.cityofnewyork.us/resource/8586-3zfm.json';
 
 async function searchNycOpenData(query) {
@@ -28,20 +23,12 @@ async function searchNycOpenData(query) {
   }
 }
 
-<<<<<<< HEAD
-=======
->>>>>>> features8and10
-=======
->>>>>>> origin/main
+
 router.get('/search', async (req, res) => {
   const q = (req.query.q || '').trim();
   if (!q) return res.json({ results: [] });
 
   try {
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> origin/main
     const localResults = await constructionSitesMethods.searchSites(q);
 
     if (localResults.length < 3) {
@@ -55,21 +42,12 @@ router.get('/search', async (req, res) => {
     }
 
     return res.json({ results: localResults });
-<<<<<<< HEAD
-=======
-    const results = await constructionSitesMethods.searchSites(q);
-    return res.json({ results });
->>>>>>> features8and10
-=======
->>>>>>> origin/main
+
   } catch (_) {
     return res.status(500).json({ results: [], error: 'Search failed' });
   }
 });
-<<<<<<< HEAD
-<<<<<<< HEAD
 
-=======
 router.get('/filter', async (req, res) => {
   try {
     const filters = {
@@ -83,8 +61,5 @@ router.get('/filter', async (req, res) => {
     return res.status(500).render('error', {error: e.toString()});
   }
 });
->>>>>>> features8and10
-=======
 
->>>>>>> origin/main
 export default router;

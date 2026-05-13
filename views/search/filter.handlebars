@@ -28,3 +28,13 @@
     </select>
     <button type="submit">Filter</button>
 </form>
+{{#if results}}
+  <h2>Results ({{results.length}})</h2>
+  {{#each results}}
+    <div class="card">
+      <a href="/sites/{{_id}}"><strong>{{schoolName}}</strong></a>
+      <p>{{buildingAddress}}, {{borough}}</p>
+      <p>Noise: {{averageRatings.noise}}/5 · Air: {{averageRatings.airQuality}}/5 · Hours: {{averageRatings.workHours}}/5</p>
+    </div>
+  {{/each}}
+{{/if}}

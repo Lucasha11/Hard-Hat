@@ -1,37 +1,24 @@
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> origin/main
+
 import { dbConnection, closeConnection } from './backend/config/mongoConnections.js';
 import { usersDataFunctions } from './backend/data/users.js';
 import reviewData from './backend/data/reviews.js';
 import reviewLikesData from './backend/data/reviewLikes.js';
 import reportData from './backend/data/reports.js';
-<<<<<<< HEAD
-=======
+
 /**
  * seed.js — inserts one test construction site and one test user for Feature 1 testing.
  * Run once:  node seed.js
  * Re-running is safe (skips inserts if the documents already exist).
  */
-
-import { dbConnection, closeConnection } from './backend/config/mongoConnections.js';
 import bcrypt from 'bcryptjs';
 
 const SITE_ID = 'M164-TEST';
 const USER_EMAIL = 'tester@hardhat.dev';
 const USER_PASSWORD = 'Testing123!';
->>>>>>> features8and10
-=======
->>>>>>> origin/main
+
 
 async function seed() {
   const db = await dbConnection();
-
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> origin/main
   // ── 1. Drop collections ───────────────────────────────────────────────────
   console.log('Dropping existing collections...');
   for (const col of ['users', 'reviews', 'ReviewLikes', 'reports', 'ConstructionSites']) {
@@ -365,8 +352,7 @@ async function seed() {
   console.log('Likes:   7 cross-user like records');
   console.log('Reports: 4 total (1 approved, 3 pending)');
 
-<<<<<<< HEAD
-=======
+
   // ── Construction Site ─────────────────────────────────────────────────────
   const sites = db.collection('ConstructionSites');
   const existingSite = await sites.findOne({ _id: SITE_ID });
@@ -434,9 +420,6 @@ async function seed() {
   }
 
   console.log('\nDone. Use /dev-login to start a session as the test user.');
->>>>>>> features8and10
-=======
->>>>>>> origin/main
   await closeConnection();
 }
 

@@ -9,14 +9,6 @@
 <body>
   <nav class="navbar">
     <a href="/" class="nav-logo">Hard Hat</a>
-<<<<<<< HEAD
-<<<<<<< HEAD
-
-=======
->>>>>>> features8and10
-=======
-
->>>>>>> origin/main
     <div class="search-container" role="search">
       <input
         type="search"
@@ -30,46 +22,29 @@
       />
       <ul id="search-dropdown" class="search-dropdown" role="listbox" hidden></ul>
     </div>
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> origin/main
-
     <div class="nav-links">
       <a href="/stats" class="nav-link">Statistics</a>
 
       <a href="/verified-sites" class="nav-link">Verified Sites</a>
-
+      <a href="/api/filter" class="nav-link">Filter</a>
       <a href="{{#if isLoggedIn}}/reviews/new{{else}}/{{/if}}" class="btn btn--hazard">
         Submit a Review
       </a>
 
       {{#if isLoggedIn}}
+      <a href="/notifications" class="nav-link">Notifications</a>
         <div class="nav-user-menu">
           <button type="button" class="nav-user-button">
             {{sessionUser.firstName}} {{sessionUser.lastName}}
             <span class="nav-user-caret">▾</span>
           </button>
-
           <div class="nav-user-dropdown">
             <a href="/profile" class="nav-user-dropdown__link">Profile</a>
             <a href="/my-activity" class="nav-user-dropdown__link">My Activity</a>
             <a href="/reports/new" class="nav-user-dropdown__link">Report a Missing Site</a>
+            <a href="/signout" class="nav-user-dropdown__link">Sign Out</a>
           </div>
         </div>
-
-<<<<<<< HEAD
-=======
-    <div class="nav-links">
-      <a href="/stats" class="nav-link">Statistics</a>
-      <a href="{{#if isLoggedIn}}/reviews/new{{else}}/{{/if}}" class="btn btn--hazard">Submit a Review</a>
-      {{#if isLoggedIn}}
-        <a href="/notifications">Notifications</a>
-        <a href="/profile" class="nav-link">{{sessionUser.firstName}} {{sessionUser.lastName}}</a>
->>>>>>> features8and10
-=======
->>>>>>> origin/main
-        <a href="/signout" class="nav-link">Sign Out</a>
       {{else}}
         <a href="/signin" class="nav-link">Sign In</a>
         <a href="/register" class="nav-link nav-link--cta">Register</a>
@@ -84,20 +59,6 @@
   <footer class="footer">
     <p>&copy; 2026 Hard Hat &mdash; NYC Construction Reviews</p>
   </footer>
-<<<<<<< HEAD
-<<<<<<< HEAD
-
   <script src="/js/search.js"></script>
 </body>
 </html>
-=======
-  <script src="/js/search.js"></script>
-</body>
-</html>
->>>>>>> features8and10
-=======
-
-  <script src="/js/search.js"></script>
-</body>
-</html>
->>>>>>> origin/main
